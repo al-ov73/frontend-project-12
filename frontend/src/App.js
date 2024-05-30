@@ -1,24 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import IndexPage from './Components/IndexPage';
+import LoginPage from './Components/LoginPage';
+import Error404Page from './Components/Error404Page';
+import { actions as usersActions } from './slices/usersSlice.js';
 
 function App() {
+  const dispatch = useDispatch();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="*" element={<Error404Page />} />
+        <Route path="/" element={<IndexPage />} />
+        <Route path="login" element={<LoginPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

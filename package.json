@@ -4,13 +4,15 @@
   "description": "[![Actions Status](https://github.com/al-ov73/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/al-ov73/frontend-project-12/actions)",
   "main": "index.js",
   "scripts": {
-    "build": "npm run build",
+    "build": "npm run build --prefix frontend",
     "start": "start-server -s ./frontend/build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@hexlet/chat-server": "^2.0.3"
+    "@hexlet/chat-server": "^2.0.3",
+    "lorem-ipsum": "^2.0.8",
+    "react-router-dom": "^6.23.1"
   }
 }
