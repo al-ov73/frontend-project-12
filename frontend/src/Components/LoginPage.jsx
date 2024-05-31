@@ -8,8 +8,8 @@ import routes from '../routes/routes.js';
 import hexletImage from '../images/LoginForm.jpg';
 import store from '../slices/index.js';
 import { useDispatch, useSelector } from 'react-redux'
-
-const dispatch = useDispatch()
+import { setCredentials } from '../slices/usersSlice.js';
+import { redirect } from "react-router-dom";
 
 const SignupSchema = Yup.object().shape({
     username: Yup.string()
@@ -19,25 +19,26 @@ const SignupSchema = Yup.object().shape({
     password: Yup.string().min(3, 'Минимум 3 символа'),
   });
 
-const handleSubmit = async (values) => {
-  console.log('send request')
-  try {
-    const response = await axios.post(routes.loginPath(), {
-      username: values.username,
-      password: values.password
-    });
-    const { token, username } = response.data;
-    if (token) {
-      console.log('начальный стор', store.getState())
-      dispatch(response.data)
-      console.log('конечный стор', store.getState())
-    }
-  } catch (e) {
-    console.log(e);
-  }
-};
-
 const LoginPage = () => {
+  const dispatch = useDispatch()
+  
+  const handleSubmit = (values) => async () => {
+    try {
+      const response = await axios.post(routes.loginPath(), {
+        username: values.username,
+        password: values.password
+      });
+      const { token, username } = response.data;
+      if (token) {
+        console.log('начальный стор', store.getState())
+        dispatch(setCredentials({ token, username }))
+        console.log('конечный стор', store.getState())
+        return redirect("/");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
   
   const formik = useFormik({
     initialValues: {
@@ -45,7 +46,7 @@ const LoginPage = () => {
       password: '',
     },
     validationSchema:SignupSchema,
-    onSubmit: (values) => handleSubmit(values),
+    onSubmit: (values) => dispatch(handleSubmit(values)),
   });
 
   return (

@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit'
 // import { RootState } from '../../app/store'
 
 const initialState = {
-  user: null,
+  username: null,
   token: null,
 }
 
@@ -14,9 +14,9 @@ const slice = createSlice({
   reducers: {
     setCredentials: (
       state,
-      {payload: { user, token }},
+      {payload: { username, token }},
     ) => {
-      state.user = user
+      state.username = username
       state.token = token
     },
   },
@@ -26,4 +26,4 @@ export const { setCredentials } = slice.actions
 
 export default slice.reducer
 
-export const selectCurrentUser = (state) => state.auth.user
+export const selectCurrentUser = (state) => state.auth.username
