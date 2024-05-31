@@ -1,20 +1,29 @@
-/* eslint-disable no-param-reassign */
-
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit'
+// import { PayloadAction } from '@reduxjs/toolkit'
+// import { User } from '../../app/services/auth'
+// import { RootState } from '../../app/store'
 
 const initialState = {
-  users: [],
-};
+  user: null,
+  token: null,
+}
 
-const usersSlice = createSlice({
-  name: 'users',
+const slice = createSlice({
+  name: 'auth',
   initialState,
   reducers: {
-    setUsers(state, { payload }) {
-      state.users = payload;
+    setCredentials: (
+      state,
+      {payload: { user, token }},
+    ) => {
+      state.user = user
+      state.token = token
     },
   },
-});
+})
 
-export const { actions } = usersSlice;
-export default usersSlice.reducer;
+export const { setCredentials } = slice.actions
+
+export default slice.reducer
+
+export const selectCurrentUser = (state) => state.auth.user

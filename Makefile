@@ -1,11 +1,15 @@
-start-server:
+start:
+	npm run build
 	npx start-server -s ./frontend/build
 
 build:
 	npm run build
 
+# start:
+# 	npm -C frontend start
+
 start-front:
-	npx start-server & npm -C frontend start
+	npm -C frontend start
 
 run:
 	npm run build
