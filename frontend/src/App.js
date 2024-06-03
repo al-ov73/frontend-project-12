@@ -34,7 +34,6 @@ const AuthProvider = ({ children }) => {
 const PrivateRoute = ({ children }) => {
   const auth = useAuth();
   const location = useLocation();
-
   return (
     auth.loggedIn ? children : <Navigate to="/login" state={{ from: location }} />
   );
@@ -48,7 +47,6 @@ function App() {
     <Router>
         <Routes>
           <Route path="*" element={<Error404Page />} />
-
           <Route path="login" element={<LoginPage />} />
           <Route
             path="/"

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFormik } from 'formik';
+import { FormikProvider, useFormik, ErrorMessage } from "formik";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import * as Yup from 'yup';
@@ -9,7 +9,9 @@ import hexletImage from '../images/LoginForm.jpg';
 import store from '../slices/index.js';
 import { useDispatch, useSelector } from 'react-redux'
 import { setCredentials } from '../slices/usersSlice.js';
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import useAuth from '../hooks/index.jsx';
+import { useState } from 'react';
 
 const SignupSchema = Yup.object().shape({
     username: Yup.string()
@@ -21,8 +23,10 @@ const SignupSchema = Yup.object().shape({
 
 const LoginPage = () => {
   const dispatch = useDispatch()
-  
-  const handleSubmit = (values) => async () => {
+  const navigate = useNavigate();
+  const auth = useAuth();
+  const [loginError, setLoginError] = useState(false);
+  const handleSubmit = (values, actions) => async () => {
     try {
       const response = await axios.post(routes.loginPath(), {
         username: values.username,
@@ -30,12 +34,18 @@ const LoginPage = () => {
       });
       const { token, username } = response.data;
       if (token) {
-        console.log('начальный стор', store.getState())
         dispatch(setCredentials({ token, username }))
-        console.log('конечный стор', store.getState())
-        return redirect("/");
+        auth.loggedIn = true;
+        return navigate('/');
+      }
+      else {
+        actions.setErrors('Неверный логин')
+        console.log('check')
+        setLoginError(true)
       }
     } catch (e) {
+      actions.setFieldError('password', 'Неверный логин')
+      console.log(actions)
       console.log(e);
     }
   };
@@ -46,7 +56,7 @@ const LoginPage = () => {
       password: '',
     },
     validationSchema:SignupSchema,
-    onSubmit: (values) => dispatch(handleSubmit(values)),
+    onSubmit: (values, actions) => dispatch(handleSubmit(values, actions)),
   });
 
   return (
@@ -59,6 +69,13 @@ const LoginPage = () => {
               <img src={hexletImage} className='rounded-circle' alt='Войти' />
               <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
             </div>
+                {loginError && (
+                  <p role="alert">
+                    Ошибка авторизации!
+                  </p>
+                )}
+
+            <FormikProvider value={formik}>
               <Form onSubmit={formik.handleSubmit}>
                   <h1 className="text-center mb-4">Войти</h1>
                   <Form.Group className="mb-3">
@@ -70,22 +87,26 @@ const LoginPage = () => {
                       onChange={formik.handleChange}
                       value={formik.values.username}
                       />
+                  <ErrorMessage name="username" />
                 </Form.Group>
 
                 <Form.Group className="mb-3" >
                   <Form.Label>Пароль</Form.Label>
-                  <Form.Control type="password" /* Изменено на password */
+                  <Form.Control type="password"
                     placeholder='Пароль'
                     id="password"
                     autoComplete="password"
                     onChange={formik.handleChange}
                     value={formik.values.password} />
+                  <ErrorMessage name="password" />
                 </Form.Group>
 
                 <Button type="submit">
                   Войти
                 </Button>
               </Form>
+
+              </FormikProvider>
           </div>
         </div>
         <div className="card-footer p-4">
