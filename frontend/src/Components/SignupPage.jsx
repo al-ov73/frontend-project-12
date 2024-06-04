@@ -6,28 +6,33 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import routes from '../routes/routes.js';
 import hexletImage from '../images/LoginForm.jpg';
+import store from '../slices/index.js';
 import { useDispatch, useSelector } from 'react-redux'
 import { setCredentials } from '../slices/usersSlice.js';
 import { useNavigate } from "react-router-dom";
 import useAuth from '../hooks/index.jsx';
+import { useState } from 'react';
 
-const LoginSchema = Yup.object().shape({
+const SignupSchema = Yup.object().shape({
     username: Yup.string()
       .min(2, 'Минимум 2 буквы')
       .max(50, 'Максимум 50 букв')
       .required('Обязательное поле'),
     password: Yup.string().min(3, 'Минимум 3 символа'),
+    passwordConfirmation: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Пароли не совпадают')
   });
 
-const LoginPage = () => {
+const SignupPage = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate();
   const auth = useAuth();
+
   const handleSubmit = (values, actions) => async () => {
     try {
-      const response = await axios.post(routes.loginPath(), {
+      const response = await axios.post(routes.signupPath(), {
         username: values.username,
-        password: values.password
+        password: values.password,
       });
       const { token, username } = response.data;
       if (token) {
@@ -36,11 +41,11 @@ const LoginPage = () => {
         return navigate('/');
       }
       else {
-        actions.setErrors('Неверный логин')
+        actions.setErrors('Какая-то ошибка')
         console.log('check')
       }
     } catch (e) {
-      actions.setFieldError('password', 'Неверный логин')
+      actions.setFieldError('password', 'Какая-то ошибка')
       console.log(actions)
       console.log(e);
     }
@@ -50,8 +55,9 @@ const LoginPage = () => {
     initialValues: {
       username: '',
       password: '',
+      passwordConfirmation: '',
     },
-    validationSchema:LoginSchema,
+    validationSchema:SignupSchema,
     onSubmit: (values, actions) => dispatch(handleSubmit(values, actions)),
   });
 
@@ -65,7 +71,7 @@ const LoginPage = () => {
               <img src={hexletImage} className='rounded-circle' alt='Войти' />
               <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
             </div>
-             <FormikProvider value={formik}>
+            <FormikProvider value={formik}>
               <Form onSubmit={formik.handleSubmit}>
                   <h1 className="text-center mb-4">Войти</h1>
                   <Form.Group className="mb-3">
@@ -91,18 +97,23 @@ const LoginPage = () => {
                   <ErrorMessage name="password" />
                 </Form.Group>
 
+                <Form.Group className="mb-3" >
+                  <Form.Label>Подтвердите пароль</Form.Label>
+                  <Form.Control type="passwordConfirmation"
+                    placeholder='Подтвердите пароль'
+                    id="passwordConfirmation"
+                    autoComplete="passwordConfirmation"
+                    onChange={formik.handleChange}
+                    value={formik.values.passwordConfirmation} />
+                  <ErrorMessage name="passwordConfirmation" />
+                </Form.Group>
+
                 <Button type="submit">
-                  Войти
+                  Зарегистрироваться
                 </Button>
               </Form>
 
               </FormikProvider>
-          </div>
-        </div>
-        <div className="card-footer p-4">
-          <div className="text-center">
-            <span>Нет аккаунта? </span>
-              <a href="/signup">Регистрация</a>
           </div>
         </div>
       </div>
@@ -111,4 +122,4 @@ const LoginPage = () => {
   )
 };
 
-export default LoginPage;
+export default SignupPage;

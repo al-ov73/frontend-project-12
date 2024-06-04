@@ -2,34 +2,39 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link,
   Navigate,
   useLocation,
 } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState } from 'react';
 import IndexPage from './Components/IndexPage';
 import LoginPage from './Components/LoginPage';
+import SignupPage from './Components/SignupPage';
 import Error404Page from './Components/Error404Page';
-import { actions as usersActions } from './slices/usersSlice.js';
-import AuthContext from './contexts/index.jsx';
+import { AuthContext, ModalContext } from './contexts/index.jsx';
 import useAuth from './hooks/index.jsx';
 
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
-
   const logIn = () => setLoggedIn(true);
   const logOut = () => {
     localStorage.removeItem('userId');
     setLoggedIn(false);
   };
-
   return (
     <AuthContext.Provider value={{ loggedIn, logIn, logOut }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+export const ModalProvider = ({ children }) => {
+  const [showAddModal, setShowAddModal] = useState(false);
+  return (
+    <ModalContext.Provider value={[showAddModal, setShowAddModal]}>
+      {children}
+    </ModalContext.Provider>
+  )
+}
 
 const PrivateRoute = ({ children }) => {
   const auth = useAuth();
@@ -40,24 +45,25 @@ const PrivateRoute = ({ children }) => {
 };
 
 function App() {
-  const dispatch = useDispatch();
-
   return (
     <AuthProvider>
+      <ModalProvider>
     <Router>
         <Routes>
-          <Route path="*" element={<Error404Page />} />
-          <Route path="login" element={<LoginPage />} />
-          <Route
-            path="/"
-            element={(
-            <PrivateRoute>
-              <IndexPage />
-            </PrivateRoute>
-            )}
-          />
+            <Route path="*" element={<Error404Page />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="signup" element={<SignupPage />} />
+            <Route
+              path="/"
+              element={(
+              <PrivateRoute>
+                <IndexPage />
+              </PrivateRoute>
+              )}
+            />            
         </Routes>
       </Router>
+    </ModalProvider>
   </AuthProvider>
   );
 }
