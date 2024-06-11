@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import routes from '../routes/routes.js';
@@ -7,22 +7,13 @@ import { FormikProvider, useFormik } from "formik";
 import AddModal from './modals/AddModal.jsx';
 import { ModalContext } from '../contexts/index.jsx';
 import { useContext } from 'react'
+import { setChannels, delChannel, channelsSelectors } from '../slices/channelsSlice.js';
+import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 const { io } = require("socket.io-client");
 const socket = io('http://localhost:5001');
-
-const getChannelsList = async (token) => {
-  try {
-    const response = await axios.get(routes.ChannelsPath(), {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (e) {
-    console.log(e);
-  }
-}
 
 const getMessagesList = async (token) => {
   try {
@@ -49,30 +40,52 @@ const handleMessageSubmit = async (token, newMessage) => {
   }
 }
 
+
+
 const IndexPage = () => {
-  const [channels, setChannels] = useState([]);
+  const dispatch = useDispatch()
+  const { token, username } = useSelector((state) => state.usersReducer);
+
+
+  const deleteChannel = (channelId) => {
+    dispatch(delChannel(channelId))
+  };
+
+  const setChannelsList = (token) => async () => {
+    try {
+      const response = await axios.get(routes.ChannelsPath(), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log('response.data', response.data)
+      dispatch(setChannels(response.data));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  // dispatch(setChannelsList(token));
+
+  const channels = useSelector(channelsSelectors.selectAll);
+  // const channels = useSelector((state) => state.channelsReducer.channels);
+  console.log('channels', channels)
+
   const [messages, setMessages] = useState([]);
   const [activeChannelId, setActiveChannelId] = useState('1');
   const [showAddModal, setShowAddModal] = useContext(ModalContext)
-
-  const token = useSelector((state) => state.usersReducer.token);
-  const username = useSelector((state) => state.usersReducer.username);
-
-  useEffect(() => {
-    getChannelsList(token).then((channels) => setChannels(channels));
-  }, []);
 
   useEffect(() => {
     getMessagesList(token).then((messages) => setMessages(messages));
   }, []);
 
-  socket.on('newMessage', (payload) => {
-    setMessages([...messages, payload])
-  });
+  // socket.on('newMessage', (payload) => {
+  //   setMessages([...messages, payload])
+  // });
 
-  socket.on('newChannel', (payload) => {
-    setChannels([...channels, payload])
-  });
+  // socket.on('newChannel', (payload) => {
+  //   dispatch(setChannels([...channels, payload]))
+  // });
 
   const formik = useFormik({
     initialValues: {
@@ -95,6 +108,16 @@ const IndexPage = () => {
   }
 
   return <>
+        <div class='d-flex flex-column h-100'>
+          <nav class="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
+            <div class="container">
+              <a class="navbar-brand" href="/">
+                Hexlet Chat
+              </a>
+            </div>
+          </nav>
+
+
     <div className="container h-100 my-4 overflow-hidden rounded shadow">
       <div className="row h-100 bg-white flex-md-row">
         <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
@@ -110,16 +133,37 @@ const IndexPage = () => {
           </div>
           <ul id="channels-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
             {channels.map((channel) => {
-              let btnClasses = "w-100 rounded-0 text-start btn";
+              let btnClasses = "w-100 rounded-0 text-start text-truncate btn";
+              let dropMenuBtnClasses = "flex-grow-0 dropdown-toggle dropdown-toggle-split btn"
               if (channel.id === activeChannelId) {
                 btnClasses += ' btn-secondary'
+                dropMenuBtnClasses += ' btn-secondary'
               }
+              let dropdownMenuId = `dropdownMenuButton${channel.id}`
               return <>
+
                 <li className="nav-item w-100">
-                  <button type="button" className={btnClasses} onClick={() => setActiveChannelId(channel.id)}>
-                    <span className="me-1">#</span>
-                    {channel.name}
-                  </button>
+
+                  <Dropdown as={ButtonGroup} className="d-flex dropdown btn-group">
+                    <Button type="button" onClick={() => setActiveChannelId(channel.id)} className={btnClasses}>
+                      <span className="me-1">
+                        #
+                      </span>
+                      {channel.name}
+                    </Button>
+                    
+                    {channel.removable && <>
+                    <Dropdown.Toggle split className={dropMenuBtnClasses} id={dropdownMenuId}>
+                    <span class="visually-hidden">Управление каналом</span>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item onClick={() => deleteChannel(channel.id)}>Удалить</Dropdown.Item>
+                      <Dropdown.Item href="#/action-2">Переименовать</Dropdown.Item>
+                    </Dropdown.Menu>
+                    </>}
+
+                  </Dropdown>
+
                 </li>
               </>
             })}
@@ -173,6 +217,7 @@ const IndexPage = () => {
       </div>
     </div>
   {showAddModal && <AddModal />}
+  </div>
   </>
 };
 
