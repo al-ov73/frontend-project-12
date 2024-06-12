@@ -7,7 +7,7 @@ import { FormikProvider, useFormik } from "formik";
 import AddModal from './modals/AddModal.jsx';
 import { ModalContext } from '../contexts/index.jsx';
 import { useContext } from 'react'
-import { setChannels, delChannel, channelsSelectors } from '../slices/channelsSlice.js';
+import { setChannels, delChannel } from '../slices/channelsSlice.js';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -41,51 +41,48 @@ const handleMessageSubmit = async (token, newMessage) => {
 }
 
 
-
 const IndexPage = () => {
   const dispatch = useDispatch()
   const { token, username } = useSelector((state) => state.usersReducer);
-
 
   const deleteChannel = (channelId) => {
     dispatch(delChannel(channelId))
   };
 
-  const setChannelsList = (token) => async () => {
-    try {
-      const response = await axios.get(routes.ChannelsPath(), {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log('response.data', response.data)
-      dispatch(setChannels(response.data));
-    } catch (e) {
-      console.log(e);
-    }
+  const setChannelsList = (token) => async (dispatch) => {
+    const response = await axios.get(routes.ChannelsPath(), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    dispatch(setChannels(response.data));
   }
 
-  // dispatch(setChannelsList(token));
+  useEffect(() => {
+    dispatch(setChannelsList(token))
+  }, []);
 
-  const channels = useSelector(channelsSelectors.selectAll);
-  // const channels = useSelector((state) => state.channelsReducer.channels);
-  console.log('channels', channels)
+  const channels = useSelector((state) => state.channels.channels, []);
 
   const [messages, setMessages] = useState([]);
   const [activeChannelId, setActiveChannelId] = useState('1');
   const [showAddModal, setShowAddModal] = useContext(ModalContext)
 
+  if (showAddModal) {
+    document.body.appendChild(<AddModal />)
+  }
+
   useEffect(() => {
     getMessagesList(token).then((messages) => setMessages(messages));
   }, []);
 
-  // socket.on('newMessage', (payload) => {
-  //   setMessages([...messages, payload])
-  // });
+  socket.on('newMessage', (payload) => {
+    setMessages([...messages, payload])
+  });
 
-  // socket.on('newChannel', (payload) => {
-  //   dispatch(setChannels([...channels, payload]))
-  // });
+  socket.on('newChannel', (payload) => {
+    dispatch(setChannels([...channels, payload]))
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -100,12 +97,6 @@ const IndexPage = () => {
       resetForm();
     },
   });
-
-
-  if (showAddModal) {
-    document.body.classList.add('modal-open');
-    document.body.style.overflow = 'hidden'
-  }
 
   return <>
         <div class='d-flex flex-column h-100'>
@@ -216,7 +207,6 @@ const IndexPage = () => {
         </div>
       </div>
     </div>
-  {showAddModal && <AddModal />}
   </div>
   </>
 };

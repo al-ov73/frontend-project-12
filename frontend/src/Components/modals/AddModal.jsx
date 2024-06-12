@@ -11,6 +11,15 @@ const AddModal = () => {
   const [showAddModal, setShowAddModal] = useContext(ModalContext)
   const token = useSelector((state) => state.usersReducer.token);
 
+  if (showAddModal) {
+    document.body.classList.add('modal-open');
+    document.body.style.overflow = 'hidden';
+  }
+  if (!showAddModal) {
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+  }
+
   const handleNewChannelSubmit = (values, actions) => {
     const newChannel = { name: values.channelName };
     try {
@@ -34,12 +43,11 @@ const AddModal = () => {
   });
 
   return <>
-    <FormikProvider value={formik}>
-      <Form onSubmit={formik.handleSubmit}>
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header">
-            <div className="modal-title h4">
+    <div role="dialog" aria-modal="true" class="fade modal show" tabindex="-1" style={{display: "block"}}>
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-title h4">
               Добавить канал
             </div>
             <Button type="button"
@@ -49,36 +57,40 @@ const AddModal = () => {
                     onClick={() => setShowAddModal(false)}>
             </Button>
           </div>
-          <div className="modal-body">
-            <Form.Group>
-            <Form.Label className="visually-hidden">Имя канала</Form.Label>
-              <Form.Control type="channelName"
-                placeholder="Имя канала"
-                autoComplete="channelName"
-                id="channelName"
-                onChange={formik.handleChange}
-                value={formik.values.channelName}
-                />
-              <ErrorMessage name="channelName" className="invalid-feedback" />
-            </Form.Group>
-
-            <div className="d-flex justify-content-end">
-              <Button type="button"
-                      className="me-2 btn btn-secondary"
-                      onClick={() => setShowAddModal(false)}>
-              Отменить
-              </Button>
-              <Button type="submit"
-                      className="btn btn-primary">
-              Отправить
-              </Button>
-            </div>
-
-            </div>
+          <div class="modal-body">
+            <FormikProvider value={formik}>
+            <Form onSubmit={formik.handleSubmit}>
+              <div>
+                <Form.Group>
+                  <Form.Label className="visually-hidden">Имя канала</Form.Label>
+                    <Form.Control type="name"
+                      placeholder="Имя канала"
+                      autoComplete="name"
+                      id="name"
+                      onChange={formik.handleChange}
+                      value={formik.values.channelName}
+                      class="mb-2 form-control"
+                      />
+                    <ErrorMessage name="name" className="invalid-feedback" />
+                  </Form.Group>
+                <div class="d-flex justify-content-end">
+                <Button type="button"
+                        className="me-2 btn btn-secondary"
+                        onClick={() => setShowAddModal(false)}>
+                Отменить
+                </Button>
+                <Button type="submit"
+                        className="btn btn-primary">
+                Отправить
+                </Button>
+                </div>
+              </div>
+            </Form>
+            </FormikProvider>
           </div>
         </div>
-      </Form>
-    </FormikProvider>
+      </div>
+    </div>
   </>
 }
 

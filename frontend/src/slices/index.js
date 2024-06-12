@@ -5,6 +5,6 @@ import channelsReducer from './channelsSlice.js';
 export default configureStore({
   reducer: {
     usersReducer,
-    channelsReducer
+    channels: channelsReducer,
   },
 });
