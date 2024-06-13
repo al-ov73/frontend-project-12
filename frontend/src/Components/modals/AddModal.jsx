@@ -5,9 +5,11 @@ import routes from '../../routes/routes.js';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
+import { useTranslation } from 'react-i18next';
 
 const AddModal = ({ showAddModal, setShowAddModal }) => {
   const token = useSelector((state) => state.usersReducer.token);
+  const { t, i18n } = useTranslation();
 
   const handleClose = () => setShowAddModal(false);
 
@@ -39,13 +41,13 @@ const AddModal = ({ showAddModal, setShowAddModal }) => {
         <FormikProvider value={formik}>
           <Form onSubmit={formik.handleSubmit}>        
             <Modal.Header closeButton>
-              <Modal.Title>Добавить канал</Modal.Title>
+              <Modal.Title>{t('Add_channel')}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form.Group>
                 <Form.Label className="visually-hidden">Имя канала</Form.Label>
                 <Form.Control type="channelName"
-                  placeholder="Имя канала"
+                  placeholder={t('Channel_name')}
                   autoComplete="channelName"
                   id="channelName"
                   onChange={formik.handleChange}
@@ -59,11 +61,11 @@ const AddModal = ({ showAddModal, setShowAddModal }) => {
               <Button type="button"
                       className="me-2 btn btn-secondary"
                       onClick={() => setShowAddModal(false)}>
-              Отменить
+              {t('Cancel')}
               </Button>
               <Button type="submit"
                       className="btn btn-primary">
-              Отправить
+              {t('Send')}
               </Button>
             </Modal.Footer>
           </Form>

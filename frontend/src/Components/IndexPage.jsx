@@ -16,6 +16,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { removeCredentials } from '../slices/usersSlice.js';
 import useAuth from '../hooks/index.jsx';
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 const { io } = require("socket.io-client");
 const socket = io('http://localhost:5001');
@@ -50,6 +51,7 @@ const IndexPage = () => {
   const dispatch = useDispatch()
   const auth = useAuth();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const { token, username } = useSelector((state) => state.usersReducer);
 
   const setChannelsList = (token) => async (dispatch) => {
@@ -141,7 +143,7 @@ const IndexPage = () => {
                 Hexlet Chat
               </a>
               <Button type="button" onClick={handleLogout} className="btn btn-primary">
-                Выйти
+                {t('Logout')}
               </Button>
             </div>
           </nav>
@@ -151,7 +153,7 @@ const IndexPage = () => {
       <div className="row h-100 bg-white flex-md-row">
         <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
           <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
-            <b>Каналы</b>
+            <b>{t('Channels')}</b>
             <button type="button" className="p-0 text-primary btn btn-group-vertical" onClick={() => setShowAddModal(true)}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="20" height="20" fill="currentColor">
                 <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
@@ -181,13 +183,13 @@ const IndexPage = () => {
                     
                     {channel.removable && <>
                     <Dropdown.Toggle split className={dropMenuBtnClasses} id={dropdownMenuId}>
-                    <span class="visually-hidden">Управление каналом</span>
+                    <span class="visually-hidden">{t('Channel management')}</span>
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
-                      <Dropdown.Item onClick={() => handleDeleteChannel(channel.id)}>Удалить</Dropdown.Item>
+                      <Dropdown.Item onClick={() => handleDeleteChannel(channel.id)}>{t('Remove')}</Dropdown.Item>
                       {showDelChannelModal && <DelChannelModal showDelChannelModal={showDelChannelModal} setShowDelChannelModal={setShowDelChannelModal} channelId={deleteChannelId}/>}
 
-                      <Dropdown.Item onClick={() => setShowRenameChannelModal(true)}>Переименовать</Dropdown.Item>
+                      <Dropdown.Item onClick={() => setShowRenameChannelModal(true)}>{t('Rename')}</Dropdown.Item>
                       {showRenameChannelModal && <RenameChannelModal showRenameChannelModal={showRenameChannelModal} setShowRenameChannelModal={setShowRenameChannelModal} channel={channel}/>}
 
                     </Dropdown.Menu>
@@ -220,7 +222,7 @@ const IndexPage = () => {
                 <Form.Group className="input-group has-validation">
                 <Form.Control
                   aria-label="Новое сообщение"
-                  placeholder="Введите сообщение..."
+                  placeholder=""
                   autoComplete="message"
                   id="message"
                   name="message"

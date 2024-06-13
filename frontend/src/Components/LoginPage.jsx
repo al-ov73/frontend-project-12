@@ -10,8 +10,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setCredentials } from '../slices/usersSlice.js';
 import { useNavigate } from "react-router-dom";
 import useAuth from '../hooks/index.jsx';
+import { useTranslation } from 'react-i18next';
 
-const LoginSchema = Yup.object().shape({
+
+const LoginPage = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const auth = useAuth();
+  const { t, i18n } = useTranslation();
+
+  const LoginSchema = Yup.object().shape({
     username: Yup.string()
       .min(2, 'Минимум 2 буквы')
       .max(50, 'Максимум 50 букв')
@@ -19,10 +27,6 @@ const LoginSchema = Yup.object().shape({
     password: Yup.string().min(3, 'Минимум 3 символа'),
   });
 
-const LoginPage = () => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate();
-  const auth = useAuth();
   const handleSubmit = (values, actions) => async () => {
     try {
       const response = await axios.post(routes.loginPath(), {

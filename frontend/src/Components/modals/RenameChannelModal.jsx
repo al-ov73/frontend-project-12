@@ -5,10 +5,11 @@ import routes from '../../routes/routes.js';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
+import { useTranslation } from 'react-i18next';
 
 const RenameChannelModal = ({ showRenameChannelModal, setShowRenameChannelModal, channel }) => {
   const token = useSelector((state) => state.usersReducer.token);
-
+  const { t, i18n } = useTranslation();
   const handleClose = () => setShowRenameChannelModal(false);
 
   const handleRenameChannelSubmit = (values, actions) => {
@@ -36,13 +37,13 @@ const RenameChannelModal = ({ showRenameChannelModal, setShowRenameChannelModal,
         <FormikProvider value={formik}>
           <Form onSubmit={formik.handleSubmit}>        
             <Modal.Header closeButton>
-              <Modal.Title>Переименовать канал</Modal.Title>
+              <Modal.Title>{t('Rename_channel')}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form.Group>
                 <Form.Label className="visually-hidden">Имя канала</Form.Label>
                 <Form.Control type="newName"
-                  placeholder="Имя канала"
+                  placeholder={t('Channel_name')}
                   autoComplete="newName"
                   id="newName"
                   onChange={formik.handleChange}
@@ -56,11 +57,11 @@ const RenameChannelModal = ({ showRenameChannelModal, setShowRenameChannelModal,
               <Button type="button"
                       className="me-2 btn btn-secondary"
                       onClick={() => setShowRenameChannelModal(false)}>
-              Отменить
+              {t('Cancel')}
               </Button>
               <Button type="submit"
                       className="btn btn-primary">
-              Отправить
+              {t('Send')}
               </Button>
             </Modal.Footer>
           </Form>
