@@ -13,6 +13,9 @@ import { setChannels, delChannel, renameChannel } from '../slices/channelsSlice.
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
+import { removeCredentials } from '../slices/usersSlice.js';
+import useAuth from '../hooks/index.jsx';
+import { useNavigate } from "react-router-dom";
 
 const { io } = require("socket.io-client");
 const socket = io('http://localhost:5001');
@@ -45,6 +48,8 @@ const handleMessageSubmit = async (token, newMessage) => {
 
 const IndexPage = () => {
   const dispatch = useDispatch()
+  const auth = useAuth();
+  const navigate = useNavigate();
   const { token, username } = useSelector((state) => state.usersReducer);
 
   const setChannelsList = (token) => async (dispatch) => {
@@ -73,6 +78,12 @@ const IndexPage = () => {
   const handleDeleteChannel = (channelId) => {
     setDeleteChannelId(channelId);
     setShowDelChannelModal(true)
+  }
+
+  const handleLogout = () => {
+    dispatch(removeCredentials);
+    auth.loggedIn = false;
+    return navigate('login');
   }
 
   // const handleDeleteMassage = async (channelId) => {
@@ -129,6 +140,9 @@ const IndexPage = () => {
               <a class="navbar-brand" href="/">
                 Hexlet Chat
               </a>
+              <Button type="button" onClick={handleLogout} className="btn btn-primary">
+                Выйти
+              </Button>
             </div>
           </nav>
 

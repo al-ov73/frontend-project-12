@@ -15,10 +15,10 @@ import { useState } from 'react';
 
 const SignupSchema = Yup.object().shape({
     username: Yup.string()
-      .min(2, 'Минимум 2 буквы')
-      .max(50, 'Максимум 50 букв')
+      .min(3, 'От 3 до 20 символов')
+      .max(20, 'От 3 до 20 символов')
       .required('Обязательное поле'),
-    password: Yup.string().min(3, 'Минимум 3 символа'),
+    password: Yup.string().min(6, 'Минимум 6 символов'),
     passwordConfirmation: Yup.string()
       .oneOf([Yup.ref('password'), null], 'Пароли не совпадают')
   });
@@ -40,14 +40,11 @@ const SignupPage = () => {
         auth.loggedIn = true;
         return navigate('/');
       }
-      else {
-        actions.setErrors('Какая-то ошибка')
-        console.log('check')
-      }
     } catch (e) {
-      actions.setFieldError('password', 'Какая-то ошибка')
-      console.log(actions)
-      console.log(e);
+      if (e.response.request.status === 409) {
+        actions.setFieldError('username', 'Такой пользователь существует')
+      }
+      console.log('e', e);
     }
   };
   
@@ -57,7 +54,7 @@ const SignupPage = () => {
       password: '',
       passwordConfirmation: '',
     },
-    validationSchema:SignupSchema,
+    validationSchema: SignupSchema,
     onSubmit: (values, actions) => dispatch(handleSubmit(values, actions)),
   });
 
@@ -83,6 +80,7 @@ const SignupPage = () => {
                       onChange={formik.handleChange}
                       value={formik.values.username}
                       />
+                  {/* <ErrorMessage  name="username" /> */}
                   <ErrorMessage name="username" />
                 </Form.Group>
 
@@ -99,7 +97,7 @@ const SignupPage = () => {
 
                 <Form.Group className="mb-3" >
                   <Form.Label>Подтвердите пароль</Form.Label>
-                  <Form.Control type="passwordConfirmation"
+                  <Form.Control type="password"
                     placeholder='Подтвердите пароль'
                     id="passwordConfirmation"
                     autoComplete="passwordConfirmation"
