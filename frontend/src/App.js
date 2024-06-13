@@ -29,8 +29,9 @@ const AuthProvider = ({ children }) => {
 
 export const ModalProvider = ({ children }) => {
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showDelChannelModal, setShowDelChannelModal] = useState(false);
   return (
-    <ModalContext.Provider value={[showAddModal, setShowAddModal]}>
+    <ModalContext.Provider value={[showAddModal, setShowAddModal, showDelChannelModal, setShowDelChannelModal]}>
       {children}
     </ModalContext.Provider>
   )
@@ -48,8 +49,8 @@ function App() {
   return (
     <AuthProvider>
       <ModalProvider>
-    <Router>
-        <Routes>
+        <Router>
+          <Routes>
             <Route path="*" element={<Error404Page />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="signup" element={<SignupPage />} />
@@ -61,10 +62,10 @@ function App() {
               </PrivateRoute>
               )}
             />            
-        </Routes>
-      </Router>
-    </ModalProvider>
-  </AuthProvider>
+          </Routes>
+        </Router>
+      </ModalProvider>
+    </AuthProvider>
   );
 }
 

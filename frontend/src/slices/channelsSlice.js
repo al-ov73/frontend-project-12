@@ -13,10 +13,19 @@ const slice = createSlice({
     },
     delChannel: (state, { payload }) => {
       state.channels = state.channels.filter((channel) => channel.id !== payload);
+    },
+    renameChannel: (state, { payload }) => {
+      console.log('payload inside slice', payload)
+      state.channels = state.channels.map((channel) => {
+        if (channel.id === payload.id) {
+          channel.name = payload.name;
+        }
+        return channel;
+      });
     }
   },
 })
 
-export const { setChannels, delChannel } = slice.actions;
+export const { setChannels, delChannel, renameChannel } = slice.actions;
 
 export default slice.reducer

@@ -5,9 +5,11 @@ import routes from '../routes/routes.js';
 import Form from 'react-bootstrap/Form';
 import { FormikProvider, useFormik } from "formik";
 import AddModal from './modals/AddModal.jsx';
+import DelChannelModal from './modals/DelChannelModal.jsx';
+import RenameChannelModal from './modals/RenameChannelModal.jsx';
 import { ModalContext } from '../contexts/index.jsx';
 import { useContext } from 'react'
-import { setChannels, delChannel } from '../slices/channelsSlice.js';
+import { setChannels, delChannel, renameChannel } from '../slices/channelsSlice.js';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -45,10 +47,6 @@ const IndexPage = () => {
   const dispatch = useDispatch()
   const { token, username } = useSelector((state) => state.usersReducer);
 
-  const deleteChannel = (channelId) => {
-    dispatch(delChannel(channelId))
-  };
-
   const setChannelsList = (token) => async (dispatch) => {
     const response = await axios.get(routes.ChannelsPath(), {
       headers: {
@@ -66,11 +64,28 @@ const IndexPage = () => {
 
   const [messages, setMessages] = useState([]);
   const [activeChannelId, setActiveChannelId] = useState('1');
-  const [showAddModal, setShowAddModal] = useContext(ModalContext)
+  const [deleteChannelId, setDeleteChannelId] = useState('1');
 
-  if (showAddModal) {
-    document.body.appendChild(<AddModal />)
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showDelChannelModal, setShowDelChannelModal] = useState(false);
+  const [showRenameChannelModal, setShowRenameChannelModal] = useState(false);
+
+  const handleDeleteChannel = (channelId) => {
+    setDeleteChannelId(channelId);
+    setShowDelChannelModal(true)
   }
+
+  // const handleDeleteMassage = async (channelId) => {
+  //   axios.delete([routes.MessagesPath(), , {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   }).then((response) => {
+  //     console.log(response.data); // => { id: '3' }
+  //   });
+  //   const newMessages = messages.filter((message) => message.channelId !== id);
+  //   setMessages(newMessages)
+  // }
 
   useEffect(() => {
     getMessagesList(token).then((messages) => setMessages(messages));
@@ -82,6 +97,15 @@ const IndexPage = () => {
 
   socket.on('newChannel', (payload) => {
     dispatch(setChannels([...channels, payload]))
+  });
+
+  socket.on('removeChannel', ({ id }) => {
+    dispatch(delChannel(id));
+    setActiveChannelId('1');
+  });
+
+  socket.on('renameChannel', (payload) => {
+    dispatch(renameChannel(payload));
   });
 
   const formik = useFormik({
@@ -132,9 +156,7 @@ const IndexPage = () => {
               }
               let dropdownMenuId = `dropdownMenuButton${channel.id}`
               return <>
-
                 <li className="nav-item w-100">
-
                   <Dropdown as={ButtonGroup} className="d-flex dropdown btn-group">
                     <Button type="button" onClick={() => setActiveChannelId(channel.id)} className={btnClasses}>
                       <span className="me-1">
@@ -148,13 +170,15 @@ const IndexPage = () => {
                     <span class="visually-hidden">Управление каналом</span>
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
-                      <Dropdown.Item onClick={() => deleteChannel(channel.id)}>Удалить</Dropdown.Item>
-                      <Dropdown.Item href="#/action-2">Переименовать</Dropdown.Item>
+                      <Dropdown.Item onClick={() => handleDeleteChannel(channel.id)}>Удалить</Dropdown.Item>
+                      {showDelChannelModal && <DelChannelModal showDelChannelModal={showDelChannelModal} setShowDelChannelModal={setShowDelChannelModal} channelId={deleteChannelId}/>}
+
+                      <Dropdown.Item onClick={() => setShowRenameChannelModal(true)}>Переименовать</Dropdown.Item>
+                      {showRenameChannelModal && <RenameChannelModal showRenameChannelModal={showRenameChannelModal} setShowRenameChannelModal={setShowRenameChannelModal} channel={channel}/>}
+
                     </Dropdown.Menu>
                     </>}
-
                   </Dropdown>
-
                 </li>
               </>
             })}
@@ -208,6 +232,8 @@ const IndexPage = () => {
       </div>
     </div>
   </div>
+  {showAddModal && <AddModal showAddModal={showAddModal} setShowAddModal={setShowAddModal} />}
+  
   </>
 };
 

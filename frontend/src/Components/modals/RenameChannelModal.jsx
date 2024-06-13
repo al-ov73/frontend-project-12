@@ -6,50 +6,47 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 
-const AddModal = ({ showAddModal, setShowAddModal }) => {
+const RenameChannelModal = ({ showRenameChannelModal, setShowRenameChannelModal, channel }) => {
   const token = useSelector((state) => state.usersReducer.token);
 
-  const handleClose = () => setShowAddModal(false);
+  const handleClose = () => setShowRenameChannelModal(false);
 
-  const handleNewChannelSubmit = (values, actions) => {
-    const newChannel = { name: values.channelName };
-    try {
-      axios.post(routes.ChannelsPath(), newChannel, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }).then(() => {
-        setShowAddModal(false)
-      });
-    } catch (e) {
-      console.log(e);
-    }
+  const handleRenameChannelSubmit = (values, actions) => {
+    console.log('rename values', values)
+    console.log('rename actions', actions)
+
+    const editedChannel = { name: values.newName };
+    axios.patch([routes.ChannelsPath(), channel.id].join('/'), editedChannel, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).then(handleClose);
   };
 
   const formik = useFormik({
     initialValues: {
-      channelName: '',
+      newName: channel.name,
     },
-    onSubmit: (values, actions) => handleNewChannelSubmit(values, actions),
+    onSubmit: (values, actions) => handleRenameChannelSubmit(values, actions),
   });
 
   return (
     <>
-      <Modal show={showAddModal} onHide={handleClose}>
+      <Modal show={showRenameChannelModal} onHide={handleClose}>
         <FormikProvider value={formik}>
           <Form onSubmit={formik.handleSubmit}>        
             <Modal.Header closeButton>
-              <Modal.Title>Добавить канал</Modal.Title>
+              <Modal.Title>Переименовать канал</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form.Group>
                 <Form.Label className="visually-hidden">Имя канала</Form.Label>
-                <Form.Control type="channelName"
+                <Form.Control type="newName"
                   placeholder="Имя канала"
-                  autoComplete="channelName"
-                  id="channelName"
+                  autoComplete="newName"
+                  id="newName"
                   onChange={formik.handleChange}
-                  value={formik.values.channelName}
+                  value={formik.values.newName}
                   class="mb-2 form-control"
                 />
                 <ErrorMessage name="name" className="invalid-feedback" />
@@ -58,7 +55,7 @@ const AddModal = ({ showAddModal, setShowAddModal }) => {
             <Modal.Footer>
               <Button type="button"
                       className="me-2 btn btn-secondary"
-                      onClick={() => setShowAddModal(false)}>
+                      onClick={() => setShowRenameChannelModal(false)}>
               Отменить
               </Button>
               <Button type="submit"
@@ -73,4 +70,4 @@ const AddModal = ({ showAddModal, setShowAddModal }) => {
   );
 }
 
-export default AddModal;
+export default RenameChannelModal;
