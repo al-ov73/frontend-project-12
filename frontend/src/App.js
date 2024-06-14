@@ -19,11 +19,6 @@ const rollbarConfig = {
   environment: 'production',
 };
 
-function TestError() {
-  const a = null
-  return a.hello()
-}
-
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const logIn = () => setLoggedIn(true);
@@ -60,7 +55,6 @@ function App() {
   return (
     <Provider config={rollbarConfig}>
       <ErrorBoundary>
-        <TestError />
         <AuthProvider>
           <ModalProvider>
             <Router>
