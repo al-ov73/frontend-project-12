@@ -12,6 +12,17 @@ import SignupPage from './Components/SignupPage';
 import Error404Page from './Components/Error404Page';
 import { AuthContext, ModalContext } from './contexts/index.jsx';
 import useAuth from './hooks/index.jsx';
+import { Provider, ErrorBoundary } from '@rollbar/react';
+
+const rollbarConfig = {
+  accessToken: 'c281d54b8bd04499be6c36258414da01',
+  environment: 'production',
+};
+
+function TestError() {
+  const a = null
+  return a.hello()
+}
 
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -47,25 +58,30 @@ const PrivateRoute = ({ children }) => {
 
 function App() {
   return (
-    <AuthProvider>
-      <ModalProvider>
-        <Router>
-          <Routes>
-            <Route path="*" element={<Error404Page />} />
-            <Route path="login" element={<LoginPage />} />
-            <Route path="signup" element={<SignupPage />} />
-            <Route
-              path="/"
-              element={(
-              <PrivateRoute>
-                <IndexPage />
-              </PrivateRoute>
-              )}
-            />            
-          </Routes>
-        </Router>
-      </ModalProvider>
-    </AuthProvider>
+    <Provider config={rollbarConfig}>
+      <ErrorBoundary>
+        <TestError />
+        <AuthProvider>
+          <ModalProvider>
+            <Router>
+              <Routes>
+                <Route path="*" element={<Error404Page />} />
+                <Route path="login" element={<LoginPage />} />
+                <Route path="signup" element={<SignupPage />} />
+                <Route
+                  path="/"
+                  element={(
+                  <PrivateRoute>
+                    <IndexPage />
+                  </PrivateRoute>
+                  )}
+                />            
+              </Routes>
+            </Router>
+          </ModalProvider>
+        </AuthProvider>
+      </ErrorBoundary>
+    </Provider>
   );
 }
 
