@@ -6,6 +6,7 @@ import axios from 'axios';
 import routes from '../../routes/routes.js';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 const DelChannelModal = ({ showDelChannelModal, setShowDelChannelModal, channelId }) => {
   const handleClose = () => setShowDelChannelModal(false);
@@ -13,11 +14,22 @@ const DelChannelModal = ({ showDelChannelModal, setShowDelChannelModal, channelI
   const { t, i18n } = useTranslation();
   
   const handleDeleteChannelSubmit = async () => {
-    axios.delete([routes.ChannelsPath(), channelId].join('/'), {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).then(handleClose);
+    try {
+      axios.delete([routes.ChannelsPath(), channelId].join('/'), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then(() => {
+        handleClose();
+        toast.success(t('toasts.NewChannelRemoved'));
+      });
+    } catch (e) {
+      if (e.message === "Network Error") {
+        toast.warn(t('toasts.NetworkError'));
+      }
+      console.log(e);
+    }
+
   };
 
   return (

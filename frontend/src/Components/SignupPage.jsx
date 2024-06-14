@@ -1,3 +1,5 @@
+// TODO Доделать интернационализацию
+
 import React from 'react';
 import { FormikProvider, useFormik, ErrorMessage } from "formik";
 import Button from 'react-bootstrap/Button';
@@ -12,6 +14,8 @@ import { setCredentials } from '../slices/usersSlice.js';
 import { useNavigate } from "react-router-dom";
 import useAuth from '../hooks/index.jsx';
 import { useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const SignupSchema = Yup.object().shape({
     username: Yup.string()
@@ -27,6 +31,7 @@ const SignupPage = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate();
   const auth = useAuth();
+  const { t, i18n } = useTranslation();
 
   const handleSubmit = (values, actions) => async () => {
     try {
@@ -38,11 +43,15 @@ const SignupPage = () => {
       if (token) {
         dispatch(setCredentials({ token, username }))
         auth.loggedIn = true;
+        toast.success(t('toasts.SignupSuccess'));
         return navigate('/');
       }
     } catch (e) {
       if (e.response.request.status === 409) {
         actions.setFieldError('username', 'Такой пользователь существует')
+      }
+      if (e.message === "Network Error") {
+        toast.warn(t('toasts.NetworkError'));
       }
       console.log('e', e);
     }

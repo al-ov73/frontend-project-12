@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 const RenameChannelModal = ({ showRenameChannelModal, setShowRenameChannelModal, channel }) => {
   const token = useSelector((state) => state.usersReducer.token);
@@ -13,15 +14,23 @@ const RenameChannelModal = ({ showRenameChannelModal, setShowRenameChannelModal,
   const handleClose = () => setShowRenameChannelModal(false);
 
   const handleRenameChannelSubmit = (values, actions) => {
-    console.log('rename values', values)
-    console.log('rename actions', actions)
-
     const editedChannel = { name: values.newName };
-    axios.patch([routes.ChannelsPath(), channel.id].join('/'), editedChannel, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).then(handleClose);
+    try {
+      axios.patch([routes.ChannelsPath(), channel.id].join('/'), editedChannel, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then(() => {
+        handleClose();
+        toast.success(t('toasts.NewChannelRenamed'));
+      });
+    } catch (e) {
+      if (e.message === "Network Error") {
+        toast.warn(t('toasts.NetworkError'));
+      }
+      console.log(e);
+    }
+
   };
 
   const formik = useFormik({

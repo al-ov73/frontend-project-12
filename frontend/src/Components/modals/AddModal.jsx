@@ -6,6 +6,9 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+
+var filter = require('leo-profanity');
 
 const AddModal = ({ showAddModal, setShowAddModal }) => {
   const token = useSelector((state) => state.usersReducer.token);
@@ -14,7 +17,8 @@ const AddModal = ({ showAddModal, setShowAddModal }) => {
   const handleClose = () => setShowAddModal(false);
 
   const handleNewChannelSubmit = (values, actions) => {
-    const newChannel = { name: values.channelName };
+    const censoredChannelName = filter.clean(values.channelName);
+    const newChannel = { name: censoredChannelName };
     try {
       axios.post(routes.ChannelsPath(), newChannel, {
         headers: {
@@ -22,8 +26,12 @@ const AddModal = ({ showAddModal, setShowAddModal }) => {
         },
       }).then(() => {
         setShowAddModal(false)
+        toast.success(t('toasts.NewChannelCreate'));
       });
     } catch (e) {
+      if (e.message === "Network Error") {
+        toast.warn(t('toasts.NetworkError'));
+      }
       console.log(e);
     }
   };

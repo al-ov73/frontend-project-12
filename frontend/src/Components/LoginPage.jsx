@@ -1,3 +1,4 @@
+// TODO Доделать интернационализацию
 import React from 'react';
 import { FormikProvider, useFormik, ErrorMessage } from "formik";
 import Button from 'react-bootstrap/Button';
@@ -11,7 +12,7 @@ import { setCredentials } from '../slices/usersSlice.js';
 import { useNavigate } from "react-router-dom";
 import useAuth from '../hooks/index.jsx';
 import { useTranslation } from 'react-i18next';
-
+import { toast, ToastContainer } from 'react-toastify';
 
 const LoginPage = () => {
   const dispatch = useDispatch()
@@ -37,16 +38,17 @@ const LoginPage = () => {
       if (token) {
         dispatch(setCredentials({ token, username }))
         auth.loggedIn = true;
+        toast.success(t('toasts.LoginSuccess'));
         return navigate('/');
       }
       else {
         actions.setErrors('Неверный логин')
-        console.log('check')
       }
     } catch (e) {
-      actions.setFieldError('password', 'Неверный логин')
-      console.log(actions)
-      console.log(e);
+      if (e.message === "Network Error") {
+        toast.warn(t('toasts.NetworkError'));
+      }
+      console.log('e', e);
     }
   };
   
@@ -59,7 +61,8 @@ const LoginPage = () => {
     onSubmit: (values, actions) => dispatch(handleSubmit(values, actions)),
   });
 
-  return (
+  return <>
+    <ToastContainer />
   <div className='container-fluid h-100'>
     <div className='row justify-content-center align-content-center h-100'>
       <div className='col-12 col-md-8 col-xxl-6'>
@@ -112,7 +115,7 @@ const LoginPage = () => {
       </div>
     </div>
   </div>
-  )
+  </>
 };
 
 export default LoginPage;

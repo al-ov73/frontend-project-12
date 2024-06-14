@@ -17,35 +17,12 @@ import { removeCredentials } from '../slices/usersSlice.js';
 import useAuth from '../hooks/index.jsx';
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 const { io } = require("socket.io-client");
 const socket = io('http://localhost:5001');
-
-const getMessagesList = async (token) => {
-  try {
-    const response = await axios.get(routes.MessagesPath(), {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-const handleMessageSubmit = async (token, newMessage) => {
-  try {
-    axios.post(routes.MessagesPath(), newMessage, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  } catch (e) {
-    console.log(e);
-  }
-}
-
+var filter = require('leo-profanity');
 
 const IndexPage = () => {
   const dispatch = useDispatch()
@@ -53,7 +30,35 @@ const IndexPage = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const { token, username } = useSelector((state) => state.usersReducer);
-
+  
+  const getMessagesList = async (token) => {
+    try {
+      const response = await axios.get(routes.MessagesPath(), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  
+  const handleMessageSubmit = async (token, newMessage) => {
+    try {
+      axios.post(routes.MessagesPath(), newMessage, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (e) {
+      if (e.message === "Network Error") {
+        toast.warn(t('toasts.NetworkError'));
+      }
+      console.log(e);
+    }
+  }
+  
   const setChannelsList = (token) => async (dispatch) => {
     const response = await axios.get(routes.ChannelsPath(), {
       headers: {
@@ -72,6 +77,9 @@ const IndexPage = () => {
   const [messages, setMessages] = useState([]);
   const [activeChannelId, setActiveChannelId] = useState('1');
   const [deleteChannelId, setDeleteChannelId] = useState('1');
+
+  const activeChannel = channels.find((channel) => channel.id === activeChannelId);
+  console.log('activeChannel', activeChannel)
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [showDelChannelModal, setShowDelChannelModal] = useState(false);
@@ -125,17 +133,19 @@ const IndexPage = () => {
     initialValues: {
       message: '',
     },
-    onSubmit: (messageText, { resetForm }) => {
+    onSubmit: (messageObject, { resetForm }) => {
+      messageObject.message = filter.clean(messageObject.message);
       handleMessageSubmit(token, {
-        body: messageText,
+        body: messageObject,
         channelId: activeChannelId,
-        username
+        username,
       });
       resetForm();
     },
   });
 
   return <>
+        <ToastContainer />
         <div class='d-flex flex-column h-100'>
           <nav class="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
             <div class="container">
@@ -203,7 +213,7 @@ const IndexPage = () => {
         <div className="col p-0 h-100">
           <div className="d-flex flex-column h-100">
             <div className="bg-light mb-4 p-3 shadow-sm small">
-              <p className="m-0"><b># random</b></p>
+              <p className="m-0"><b># {activeChannel && activeChannel.name}</b></p>
               <span className="text-muted">0 сообщений</span>
             </div>
             <div id="messages-box" className="chat-messages overflow-auto px-5 ">

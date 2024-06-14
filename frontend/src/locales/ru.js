@@ -15,12 +15,20 @@ export default {
       "Delete_channel_?": "Удалить канал?",
       "Rename_channel": "Переименовать канал",
       "C": "Имя канала",
-      forms: {
-        "": "",
-        "": "",
-        "": "",
-        "": "",
+      toasts: {
+        "NewChannelCreate": "Новый канал успешно создан",
+        "NewChannelRemoved": "Канал успешно удален",
+        "NewChannelRenamed": "Канал успешно переименован",
+        "LoginSuccess": "Вы успешно зашли в систему",
+        "SignupSuccess": "Пользователь успешно создан",
+        "NetworkError": "Ошибка сети",
       }
+      // forms: {
+      //   "": "",
+      //   "": "",
+      //   "": "",
+      //   "": "",
+      // }
 
     }
   }
