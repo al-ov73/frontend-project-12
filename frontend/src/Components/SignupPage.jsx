@@ -88,15 +88,14 @@ const SignupPage = () => {
               <Form onSubmit={formik.handleSubmit}>
                   <h1 className="text-center mb-4">Войти</h1>
                   <Form.Group className="mb-3">
-                  <Form.Label>Ваш Ник</Form.Label>
+                  <Form.Label>Имя пользователя</Form.Label>
                     <Form.Control type="text"
-                      placeholder="Ваш ник"
+                      placeholder="Имя пользователя"
                       autoComplete="username"
                       id="username"
                       onChange={formik.handleChange}
                       value={formik.values.username}
                       />
-                  {/* <ErrorMessage  name="username" /> */}
                   <ErrorMessage name="username" />
                 </Form.Group>
 
