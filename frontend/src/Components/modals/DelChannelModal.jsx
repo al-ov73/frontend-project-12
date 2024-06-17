@@ -37,7 +37,7 @@ const DelChannelModal = ({ showDelChannelModal, setShowDelChannelModal, channelI
       <Modal show={showDelChannelModal} onHide={handleClose}>
         <Form>        
           <Modal.Header closeButton>
-            <Modal.Title>{t('Delete_channel_')}</Modal.Title>
+            <Modal.Title>{t('Delete_channel_?')}</Modal.Title>
           </Modal.Header>
           <Modal.Footer>
             <Button onClick={handleDeleteChannelSubmit}

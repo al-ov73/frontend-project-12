@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 
 var filter = require('leo-profanity');
 
-const AddModal = ({ showAddModal, setShowAddModal }) => {
+const AddModal = ({ showAddModal, setShowAddModal, setActiveChannelId }) => {
   const token = useSelector((state) => state.usersReducer.token);
   const { t, i18n } = useTranslation();
 
@@ -24,8 +24,9 @@ const AddModal = ({ showAddModal, setShowAddModal }) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }).then(() => {
-        setShowAddModal(false)
+      }).then((response) => {
+        setShowAddModal(false);
+        setActiveChannelId(response.data.id);
         toast.success(t('toasts.NewChannelCreate'));
       });
     } catch (e) {

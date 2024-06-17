@@ -79,7 +79,6 @@ const IndexPage = () => {
   const [deleteChannelId, setDeleteChannelId] = useState('1');
 
   const activeChannel = channels.find((channel) => channel.id === activeChannelId);
-  console.log('activeChannel', activeChannel)
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [showDelChannelModal, setShowDelChannelModal] = useState(false);
@@ -96,17 +95,22 @@ const IndexPage = () => {
     return navigate('login');
   }
 
-  // const handleDeleteMassage = async (channelId) => {
-  //   axios.delete([routes.MessagesPath(), , {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   }).then((response) => {
-  //     console.log(response.data); // => { id: '3' }
-  //   });
-  //   const newMessages = messages.filter((message) => message.channelId !== id);
-  //   setMessages(newMessages)
-  // }
+  const handleDeleteMessage = async (channelId) => {
+    const messagesToDelete = messages.filter((message) => message.channelId === channelId);
+    if (messagesToDelete) {
+      const promises = messagesToDelete.map((message) => {
+        axios.delete([routes.MessagesPath(), message.id].join('/'), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          },
+        })
+      })
+      Promise.all(promises).then(() => {
+        const newMessages = messages.filter((message) => message.channelId !== channelId);
+        setMessages(newMessages)      
+      })
+    }
+  }
 
   useEffect(() => {
     getMessagesList(token).then((messages) => setMessages(messages));
@@ -122,11 +126,15 @@ const IndexPage = () => {
 
   socket.on('removeChannel', ({ id }) => {
     dispatch(delChannel(id));
-    setActiveChannelId('1');
+    if (id === activeChannelId) {
+      setActiveChannelId('1');
+    }
+    handleDeleteMessage(id)
   });
 
   socket.on('renameChannel', (payload) => {
     dispatch(renameChannel(payload));
+    
   });
 
   const formik = useFormik({
@@ -174,17 +182,23 @@ const IndexPage = () => {
           </div>
           <ul id="channels-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
             {channels.map((channel) => {
-              let btnClasses = "w-100 rounded-0 text-start text-truncate btn";
-              let dropMenuBtnClasses = "flex-grow-0 dropdown-toggle dropdown-toggle-split btn"
+              let btnVariant;
+              let dropMenuVariant;
               if (channel.id === activeChannelId) {
-                btnClasses += ' btn-secondary'
-                dropMenuBtnClasses += ' btn-secondary'
+                btnVariant = 'secondary';
+                dropMenuVariant = 'secondary';
+              } else {
+                btnVariant = 'outline-secondary';
+                dropMenuVariant = 'outline-secondary';              
               }
               let dropdownMenuId = `dropdownMenuButton${channel.id}`
               return <>
                 <li className="nav-item w-100">
                   <Dropdown as={ButtonGroup} className="d-flex dropdown btn-group">
-                    <Button type="button" onClick={() => setActiveChannelId(channel.id)} className={btnClasses}>
+                    <Button type="button"
+                            variant={btnVariant}
+                            onClick={() => setActiveChannelId(channel.id)}
+                            className="w-100 rounded-0 text-start text-truncate">
                       <span className="me-1">
                         #
                       </span>
@@ -192,13 +206,15 @@ const IndexPage = () => {
                     </Button>
                     
                     {channel.removable && <>
-                    <Dropdown.Toggle split className={dropMenuBtnClasses} id={dropdownMenuId}>
+                    <Dropdown.Toggle split
+                                    variant={dropMenuVariant}
+                                    className="flex-grow-0 dropdown-toggle dropdown-toggle-split btn"
+                                    id={dropdownMenuId}>
                     <span class="visually-hidden">{t('Channel management')}</span>
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                       <Dropdown.Item onClick={() => handleDeleteChannel(channel.id)}>{t('Remove')}</Dropdown.Item>
-                      {showDelChannelModal && <DelChannelModal showDelChannelModal={showDelChannelModal} setShowDelChannelModal={setShowDelChannelModal} channelId={deleteChannelId}/>}
-
+                      {showDelChannelModal && <DelChannelModal showDelChannelModal={showDelChannelModal} setShowDelChannelModal={setShowDelChannelModal} channelId={deleteChannelId} />}
                       <Dropdown.Item onClick={() => setShowRenameChannelModal(true)}>{t('Rename')}</Dropdown.Item>
                       {showRenameChannelModal && <RenameChannelModal showRenameChannelModal={showRenameChannelModal} setShowRenameChannelModal={setShowRenameChannelModal} channel={channel}/>}
 
@@ -258,7 +274,7 @@ const IndexPage = () => {
       </div>
     </div>
   </div>
-  {showAddModal && <AddModal showAddModal={showAddModal} setShowAddModal={setShowAddModal} />}
+  {showAddModal && <AddModal showAddModal={showAddModal} setShowAddModal={setShowAddModal} setActiveChannelId={setActiveChannelId} />}
   
   </>
 };

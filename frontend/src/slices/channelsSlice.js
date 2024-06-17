@@ -15,7 +15,6 @@ const slice = createSlice({
       state.channels = state.channels.filter((channel) => channel.id !== payload);
     },
     renameChannel: (state, { payload }) => {
-      console.log('payload inside slice', payload)
       state.channels = state.channels.map((channel) => {
         if (channel.id === payload.id) {
           channel.name = payload.name;
