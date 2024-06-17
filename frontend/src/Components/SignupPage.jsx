@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux'
 import { setCredentials } from '../slices/usersSlice.js';
 import { useNavigate } from "react-router-dom";
 import useAuth from '../hooks/index.jsx';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 
 const SignupSchema = Yup.object().shape({
@@ -65,7 +65,16 @@ const SignupPage = () => {
     onSubmit: (values, actions) => dispatch(handleSubmit(values, actions)),
   });
 
-  return (
+  return <>
+    <ToastContainer />
+      <div class='d-flex flex-column h-100'>
+      <nav class="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
+        <div class="container">
+          <a class="navbar-brand" href="/">
+            Hexlet Chat
+          </a>
+        </div>
+      </nav>
   <div className='container-fluid h-100'>
     <div className='row justify-content-center align-content-center h-100'>
       <div className='col-12 col-md-8 col-xxl-6'>
@@ -124,7 +133,8 @@ const SignupPage = () => {
       </div>
     </div>
   </div>
-  )
+  </div>
+  </>
 };
 
 export default SignupPage;
