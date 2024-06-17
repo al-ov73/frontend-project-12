@@ -125,7 +125,6 @@ const SignupPage = () => {
                   Зарегистрироваться
                 </Button>
               </Form>
-
               </FormikProvider>
           </div>
         </div>
