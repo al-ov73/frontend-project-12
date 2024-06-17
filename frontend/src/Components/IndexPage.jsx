@@ -7,8 +7,6 @@ import { FormikProvider, useFormik } from "formik";
 import AddModal from './modals/AddModal.jsx';
 import DelChannelModal from './modals/DelChannelModal.jsx';
 import RenameChannelModal from './modals/RenameChannelModal.jsx';
-import { ModalContext } from '../contexts/index.jsx';
-import { useContext } from 'react'
 import { setChannels, delChannel, renameChannel } from '../slices/channelsSlice.js';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
@@ -28,7 +26,7 @@ const IndexPage = () => {
   const dispatch = useDispatch()
   const auth = useAuth();
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { token, username } = useSelector((state) => state.usersReducer);
   
   const getMessagesList = async (token) => {

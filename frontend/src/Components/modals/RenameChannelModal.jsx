@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 
 const RenameChannelModal = ({ showRenameChannelModal, setShowRenameChannelModal, channel }) => {
   const token = useSelector((state) => state.usersReducer.token);
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const handleClose = () => setShowRenameChannelModal(false);
 
   const handleRenameChannelSubmit = (values, actions) => {

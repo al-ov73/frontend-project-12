@@ -1,17 +1,16 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import { delChannel } from '../../slices/channelsSlice.js';
 import axios from 'axios';
 import routes from '../../routes/routes.js';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
 const DelChannelModal = ({ showDelChannelModal, setShowDelChannelModal, channelId }) => {
   const handleClose = () => setShowDelChannelModal(false);
   const { token } = useSelector((state) => state.usersReducer);
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   
   const handleDeleteChannelSubmit = async () => {
     try {

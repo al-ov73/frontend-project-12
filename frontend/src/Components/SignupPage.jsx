@@ -8,13 +8,11 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import routes from '../routes/routes.js';
 import hexletImage from '../images/LoginForm.jpg';
-import store from '../slices/index.js';
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { setCredentials } from '../slices/usersSlice.js';
 import { useNavigate } from "react-router-dom";
 import useAuth from '../hooks/index.jsx';
-import { useState } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 
 const SignupSchema = Yup.object().shape({
@@ -31,7 +29,7 @@ const SignupPage = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate();
   const auth = useAuth();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const handleSubmit = (values, actions) => async () => {
     try {

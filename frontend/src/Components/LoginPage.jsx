@@ -7,7 +7,7 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import routes from '../routes/routes.js';
 import hexletImage from '../images/LoginForm.jpg';
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { setCredentials } from '../slices/usersSlice.js';
 import { useNavigate } from "react-router-dom";
 import useAuth from '../hooks/index.jsx';
@@ -18,7 +18,7 @@ const LoginPage = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate();
   const auth = useAuth();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const LoginSchema = Yup.object().shape({
     username: Yup.string()

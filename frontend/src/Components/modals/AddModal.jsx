@@ -12,7 +12,7 @@ var filter = require('leo-profanity');
 
 const AddModal = ({ showAddModal, setShowAddModal, setActiveChannelId }) => {
   const token = useSelector((state) => state.usersReducer.token);
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const handleClose = () => setShowAddModal(false);
 
