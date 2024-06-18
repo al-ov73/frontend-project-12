@@ -46,7 +46,7 @@ const SignupPage = () => {
       }
     } catch (e) {
       if (e.response.request.status === 409) {
-        actions.setFieldError('username', 'Такой пользователь существует')
+        actions.setFieldError('username', t('forms.UserAlreadyExist'))
       }
       if (e.message === "Network Error") {
         toast.warn(t('toasts.NetworkError'));
