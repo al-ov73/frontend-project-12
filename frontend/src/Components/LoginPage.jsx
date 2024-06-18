@@ -45,6 +45,7 @@ const LoginPage = () => {
         toast.warn(t('toasts.NetworkError'));
       }
       if (e.message === "Request failed with status code 401") {
+        console.log('forms.IncorrectUsernameOrPassword')
         actions.setFieldError('password', t('forms.IncorrectUsernameOrPassword'))
       }
       console.log('e', e);
