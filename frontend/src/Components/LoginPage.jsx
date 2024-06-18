@@ -45,7 +45,7 @@ const LoginPage = () => {
         toast.warn(t('toasts.NetworkError'));
       }
       if (e.message === "Request failed with status code 401") {
-        actions.setFieldError('username', t('forms.IncorrectUsernameOrPassword'))
+        actions.setFieldError('password', t('forms.IncorrectUsernameOrPassword'))
       }
       console.log('e', e);
     }
@@ -81,18 +81,18 @@ const LoginPage = () => {
               <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
             </div>
              <FormikProvider value={formik}>
-              <Form onSubmit={formik.handleSubmit}>
+              <Form onSubmit={formik.handleSubmit} className="col-12 col-md-6 mt-3 mt-mb-0">
                   <h1 className="text-center mb-4">Войти</h1>
                   <Form.Group className="mb-3">
                   <Form.Label>Ваш Ник</Form.Label>
-                    <Form.Control type="text"
+                    <Form.Control
                       placeholder="Ваш ник"
                       autoComplete="username"
                       id="username"
                       onChange={formik.handleChange}
                       value={formik.values.username}
                       />
-                  <ErrorMessage name="username" />
+                  <ErrorMessage component="div" name="username" />
                 </Form.Group>
 
                 <Form.Group className="mb-3" >
@@ -103,7 +103,7 @@ const LoginPage = () => {
                     autoComplete="password"
                     onChange={formik.handleChange}
                     value={formik.values.password} />
-                  <ErrorMessage name="password" />
+                  <ErrorMessage component="div" name="password" />
                 </Form.Group>
 
                 <Button type="submit">
