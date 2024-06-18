@@ -22,10 +22,10 @@ const LoginPage = () => {
 
   const LoginSchema = Yup.object().shape({
     username: Yup.string()
-      .min(2, 'Минимум 2 буквы')
-      .max(50, 'Максимум 50 букв')
-      .required('Обязательное поле'),
-    password: Yup.string().min(3, 'Минимум 3 символа'),
+      .min(3, t('forms.From3To20Symbols'))
+      .max(20, t('forms.From3To20Symbols'))
+      .required(t('forms.RequiredField')),
+    password: Yup.string().min(6, t('forms.MoreThen6Symbols')),
   });
 
   const handleSubmit = (values, actions) => async () => {
@@ -42,7 +42,7 @@ const LoginPage = () => {
         return navigate('/');
       }
       else {
-        actions.setErrors('Неверный логин')
+        actions.setErrors(t('forms.IncorrectUsernameOrPassword'))
       }
     } catch (e) {
       if (e.message === "Network Error") {
@@ -117,8 +117,8 @@ const LoginPage = () => {
         </div>
         <div className="card-footer p-4">
           <div className="text-center">
-            <span>Нет аккаунта? </span>
-              <a href="/signup">Регистрация</a>
+            <span>t('NoAccount?')</span>
+              <a href="/signup">t('Registration')</a>
           </div>
         </div>
       </div>

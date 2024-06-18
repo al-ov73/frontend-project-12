@@ -17,12 +17,12 @@ import { useTranslation } from 'react-i18next';
 
 const SignupSchema = Yup.object().shape({
     username: Yup.string()
-      .min(3, 'От 3 до 20 символов')
-      .max(20, 'От 3 до 20 символов')
-      .required('Обязательное поле'),
-    password: Yup.string().min(6, 'Минимум 6 символов'),
+      .min(3, t('forms.From3To20Symbols'))
+      .max(20, t('forms.From3To20Symbols'))
+      .required(t('forms.RequiredField')),
+    password: Yup.string().min(6, t('forms.MoreThen6Symbols')),
     passwordConfirmation: Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Пароли не совпадают')
+      .oneOf([Yup.ref('password'), null], t('forms.PasswordsShouldMatch'))
   });
 
 const SignupPage = () => {

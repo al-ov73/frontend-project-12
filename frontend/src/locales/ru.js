@@ -15,6 +15,9 @@ export default {
       "Delete_channel_?": "Удалить канал?",
       "Rename_channel": "Переименовать канал",
       "C": "Имя канала",
+      "NoAccount?": "Нет аккаунта?",
+      "Registration": "Регистрация",
+      "": "",
       toasts: {
         "NewChannelCreate": "Новый канал успешно создан",
         "NewChannelRemoved": "Канал успешно удален",
@@ -25,8 +28,11 @@ export default {
       },
       forms: {
         "UserAlreadyExist": "Такой пользователь уже существует",
-        "": "",
-        "": "",
+        "MoreThen6Symbols": "Не менее 6 символов",
+        "From3To20Symbols": "От 3 до 20 символов",
+        "PasswordsShouldMatch": "Пароли должны совпадать",
+        "IncorrectUsernameOrPassword": "Неверные имя пользователя или пароль",
+        "RequiredField": "Обязательное поле",
         "": "",
       }
 
