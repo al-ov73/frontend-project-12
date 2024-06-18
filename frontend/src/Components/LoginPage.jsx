@@ -116,8 +116,8 @@ const LoginPage = () => {
         </div>
         <div className="card-footer p-4">
           <div className="text-center">
-            <span>t('NoAccount?')</span>
-              <a href="/signup">t('Registration')</a>
+            <span>{t('NoAccount?')}</span>
+              <a href="/signup">{t('Registration')}</a>
           </div>
         </div>
       </div>
