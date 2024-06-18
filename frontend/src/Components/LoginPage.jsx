@@ -40,12 +40,15 @@ const LoginPage = () => {
         toast.success(t('toasts.LoginSuccess'));
         return navigate('/');
       }
-      else {
-        actions.setErrors(t('forms.IncorrectUsernameOrPassword'))
-      }
+      // else {
+      //   actions.setErrors(t('forms.IncorrectUsernameOrPassword'))
+      // }
     } catch (e) {
       if (e.message === "Network Error") {
         toast.warn(t('toasts.NetworkError'));
+      }
+      if (e.message === "Request failed with status code 401") {
+        actions.setFieldError('username', t('forms.IncorrectUsernameOrPassword'))
       }
       console.log('e', e);
     }
@@ -120,7 +123,7 @@ const LoginPage = () => {
               <a href="/signup">{t('Registration')}</a>
           </div>
         </div>
-      </div>git pu
+      </div>
     </div>
   </div>
   </div>
