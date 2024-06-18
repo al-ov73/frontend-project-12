@@ -120,7 +120,7 @@ const LoginPage = () => {
               <a href="/signup">{t('Registration')}</a>
           </div>
         </div>
-      </div>
+      </div>git pu
     </div>
   </div>
   </div>
