@@ -1,5 +1,3 @@
-// TODO Доделать интернационализацию
-
 import React from 'react';
 import { FormikProvider, useFormik, ErrorMessage } from "formik";
 import Button from 'react-bootstrap/Button';
@@ -15,21 +13,22 @@ import useAuth from '../hooks/index.jsx';
 import { toast, ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 
-const SignupSchema = Yup.object().shape({
-    username: Yup.string()
-      .min(3, 'От 3 до 20 символов')
-      .max(20, 'От 3 до 20 символов')
-      .required('Обязательное поле'),
-    password: Yup.string().min(6, 'Минимум 6 символов'),
-    passwordConfirmation: Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Пароли не совпадают')
-  });
 
 const SignupPage = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate();
   const auth = useAuth();
   const { t } = useTranslation();
+
+  const SignupSchema = Yup.object().shape({
+    username: Yup.string()
+      .min(3, t('forms.From3To20Symbols'))
+      .max(20, t('forms.From3To20Symbols'))
+      .required(t('forms.RequiredField')),
+    password: Yup.string().min(6, t('forms.MoreThen6Symbols')),
+    passwordConfirmation: Yup.string()
+      .oneOf([Yup.ref('password'), null], t('forms.PasswordsShouldMatch'))
+  });
 
   const handleSubmit = (values, actions) => async () => {
     try {
