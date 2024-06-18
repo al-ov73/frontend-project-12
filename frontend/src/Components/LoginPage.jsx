@@ -19,14 +19,6 @@ const LoginPage = () => {
   const auth = useAuth();
   const { t } = useTranslation();
 
-  const LoginSchema = Yup.object().shape({
-    username: Yup.string()
-      .min(3, t('forms.From3To20Symbols'))
-      .max(20, t('forms.From3To20Symbols'))
-      .required(t('forms.RequiredField')),
-    password: Yup.string().min(6, t('forms.MoreThen6Symbols')),
-  });
-
   const handleSubmit = (values, actions) => async () => {
     try {
       const response = await axios.post(routes.loginPath(), {
@@ -40,9 +32,6 @@ const LoginPage = () => {
         toast.success(t('toasts.LoginSuccess'));
         return navigate('/');
       }
-      // else {
-      //   actions.setErrors(t('forms.IncorrectUsernameOrPassword'))
-      // }
     } catch (e) {
       if (e.message === "Network Error") {
         toast.warn(t('toasts.NetworkError'));
@@ -59,7 +48,6 @@ const LoginPage = () => {
       username: '',
       password: '',
     },
-    validationSchema:LoginSchema,
     onSubmit: (values, actions) => dispatch(handleSubmit(values, actions)),
   });
 
