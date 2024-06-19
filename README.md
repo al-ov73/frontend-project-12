@@ -4,7 +4,7 @@
 Hexlet JavaScript/React project:
 Slack-like chat with channels management based on socket.io.
 
-Deployed servise:
+Deployed service:
 </br>
 https://slack-chat-981a.onrender.com
 
