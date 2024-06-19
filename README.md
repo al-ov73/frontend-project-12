@@ -10,7 +10,7 @@ https://slack-chat-981a.onrender.com
 
 ---
 
-Covered bt PlayWrigth tests
+Covered by PlayWrigth tests
 
 ---
 
