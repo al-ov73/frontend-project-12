@@ -11,3 +11,6 @@ run: build start
 
 install:
 	npm ci
+
+test:
+	npx playwright test --project=chromium

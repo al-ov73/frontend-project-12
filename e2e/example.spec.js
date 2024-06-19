@@ -14,50 +14,50 @@ const newUser = {
 };
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('http://localhost:38789');
+  await page.goto('http://codespaces-55b8c9:5001');
   await page.waitForTimeout(300);
 
   await page.locator('text=Hexlet Chat').first().click();
 });
 
-// test.describe('registration', () => {
-//   test('handle new user creation', async ({ page }) => {
-//     await page.locator('text=Регистрация').first().click();
-//     await page.waitForURL('**/signup');
-//     await page.locator('text=Имя пользователя').first().type(newUser.login);
-//     await page.locator('text=/^Пароль$/').first().type(newUser.password);
-//     await page.locator('text=Подтвердите пароль').first().type(newUser.password);
-//     await page.locator('button[type="submit"]').first().click();
-//     await page.waitForURL('**/');
-//     await expect(await page.getByRole('button', { name: 'general' })).not.toHaveCount(0);
-//   });
+test.describe('registration', () => {
+  test('handle new user creation', async ({ page }) => {
+    await page.locator('text=Регистрация').first().click();
+    await page.waitForURL('**/signup');
+    await page.locator('text=Имя пользователя').first().type(newUser.login);
+    await page.locator('text=/^Пароль$/').first().type(newUser.password);
+    await page.locator('text=Подтвердите пароль').first().type(newUser.password);
+    await page.locator('button[type="submit"]').first().click();
+    await page.waitForURL('**/');
+    await expect(await page.getByRole('button', { name: 'general' })).not.toHaveCount(0);
+  });
 
-//   test('no duplicated users created', async ({ page }) => {
-//     await page.locator('text=Регистрация').first().click();
-//     await page.waitForURL('**/signup');
-//     await page.locator('text=Имя пользователя').first().type(newUser.login);
-//     await page.locator('text=/^Пароль$/').first().type(newUser.password);
-//     await page.locator('text=Подтвердите пароль').first().type(newUser.password);
-//     await page.locator('button[type="submit"]').first().click();
-//     await page.waitForURL('**/');
-//     await expect(await page.locator('text=Такой пользователь уже существует')).not.toHaveCount(0);
-//   });
+  test('no duplicated users created', async ({ page }) => {
+    await page.locator('text=Регистрация').first().click();
+    await page.waitForURL('**/signup');
+    await page.locator('text=Имя пользователя').first().type(newUser.login);
+    await page.locator('text=/^Пароль$/').first().type(newUser.password);
+    await page.locator('text=Подтвердите пароль').first().type(newUser.password);
+    await page.locator('button[type="submit"]').first().click();
+    await page.waitForURL('**/');
+    await expect(await page.locator('text=Такой пользователь уже существует')).not.toHaveCount(0);
+  });
 
-//   test('handle validation', async ({ page }) => {
-//     await page.locator('text=Регистрация').first().click();
-//     await page.waitForURL('**/signup');
+  test('handle validation', async ({ page }) => {
+    await page.locator('text=Регистрация').first().click();
+    await page.waitForURL('**/signup');
 
-//     await page.locator('text=Имя пользователя').first().type('u');
-//     await page.locator('text=/^Пароль$/').first().type('pass');
-//     await page.locator('text=Подтвердите пароль').first().type('passw');
-//     await page.locator('button[type="submit"]').first().click();
-//     await expect(await page.locator('text=От 3 до 20 символов')).toHaveCount(1);
-//     await expect(await page.locator('text=Не менее 6 символов')).toHaveCount(1);
-//     await expect(
-//       await page.locator('text=Пароли должны совпадать'),
-//     ).toHaveCount(1);
-//   });
-// });
+    await page.locator('text=Имя пользователя').first().type('u');
+    await page.locator('text=/^Пароль$/').first().type('pass');
+    await page.locator('text=Подтвердите пароль').first().type('passw');
+    await page.locator('button[type="submit"]').first().click();
+    await expect(await page.locator('text=От 3 до 20 символов')).toHaveCount(1);
+    await expect(await page.locator('text=Не менее 6 символов')).toHaveCount(1);
+    await expect(
+      await page.locator('text=Пароли должны совпадать'),
+    ).toHaveCount(1);
+  });
+});
 
 test.describe('auth', () => {
   test('login page on enter as guest', async ({ page }) => {
@@ -69,7 +69,6 @@ test.describe('auth', () => {
     await page.locator('text=Ваш ник').first().type(registeredUser.login);
     await page.locator('text=/^Пароль$/').first().type(registeredUser.password);
     await page.locator('button[type="submit"]').first().click();
-
     await expect(
       await page.locator('text=Неверные имя пользователя или пароль'),
     ).toHaveCount(0);
@@ -79,7 +78,6 @@ test.describe('auth', () => {
     await page.locator('text=Ваш ник').first().type('guest');
     await page.locator('text=/^Пароль$/').first().type('pass');
     await page.locator('button[type="submit"]').first().click();
-
     await expect(
       await page.locator('text=Неверные имя пользователя или пароль'),
     ).toHaveCount(1);

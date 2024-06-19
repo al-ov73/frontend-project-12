@@ -84,26 +84,25 @@ const LoginPage = () => {
              <FormikProvider value={formik}>
               <Form onSubmit={formik.handleSubmit} className="col-12 col-md-6 mt-3 mt-mb-0">
                   <h1 className="text-center mb-4">Войти</h1>
-                  <Form.Group className="mb-3">
-                  <Form.Label>Ваш Ник</Form.Label>
-                    <Form.Control
-                      placeholder="Ваш ник"
-                      autoComplete="username"
-                      id="username"
-                      onChange={formik.handleChange}
-                      value={formik.values.username}
-                      />
+                  <Form.Group className="form-floating mb-3">
+                  
+                  <Form.Control
+                    autoComplete="username"
+                    id="username"
+                    onChange={formik.handleChange}
+                    value={formik.values.username}
+                    />
+                    <Form.Label htmlFor='username' >Ваш ник</Form.Label>
                   <ErrorMessage component="div" name="username" />
                 </Form.Group>
 
-                <Form.Group className="mb-3" >
-                  <Form.Label>Пароль</Form.Label>
+                <Form.Group className="form-floating mb-3" >
                   <Form.Control type="password"
-                    placeholder='Пароль'
                     id="password"
                     autoComplete="password"
                     onChange={formik.handleChange}
                     value={formik.values.password} />
+                  <Form.Label htmlFor='password' >Пароль</Form.Label>  
                   <ErrorMessage component="div" name="password" />
                 </Form.Group>
 
