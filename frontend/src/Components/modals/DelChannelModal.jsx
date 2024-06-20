@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 
 const DelChannelModal = ({ showDelChannelModal, setShowDelChannelModal, channelId }) => {
   const handleClose = () => setShowDelChannelModal(false);
-  const { token } = useSelector((state) => state.usersReducer);
+  const token = useSelector((state) => state.users.token);
   const { t } = useTranslation();
   
   const handleDeleteChannelSubmit = async () => {

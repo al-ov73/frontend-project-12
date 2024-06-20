@@ -1,17 +1,19 @@
 import React from 'react';
-import { FormikProvider, useFormik, ErrorMessage } from "formik";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import * as Yup from 'yup';
-import axios from 'axios';
-import routes from '../routes/routes.js';
-import hexletImage from '../images/LoginForm.jpg';
 import { useDispatch } from 'react-redux'
-import { setCredentials } from '../slices/usersSlice.js';
 import { useNavigate } from "react-router-dom";
-import useAuth from '../hooks/index.jsx';
 import { useTranslation } from 'react-i18next';
 import { toast, ToastContainer } from 'react-toastify';
+import { FormikProvider, useFormik, ErrorMessage } from "formik";
+import * as Yup from 'yup';
+import axios from 'axios';
+
+import routes from '../routes/routes.js';
+import hexletImage from '../images/LoginForm.jpg';
+import { setCredentials } from '../slices/usersSlice.js';
+import useAuth from '../hooks/index.jsx';
+
 
 const LoginPage = () => {
   const dispatch = useDispatch()
@@ -64,65 +66,60 @@ const LoginPage = () => {
   return <>
     <ToastContainer />
     <div class='d-flex flex-column h-100'>
-          <nav class="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
-            <div class="container">
-              <a class="navbar-brand" href="/">
-                Hexlet Chat
-              </a>
-            </div>
-          </nav>
-
-  <div className='container-fluid h-100'>
-    <div className='row justify-content-center align-content-center h-100'>
-      <div className='col-12 col-md-8 col-xxl-6'>
-        <div className='card shadow-sm'>
-          <div className='card-body row p-5'>
-            <div className='col-12 col-md-6 d-flex align-items-center justify-content-center'>
-              <img src={hexletImage} className='rounded-circle' alt='Войти' />
-              <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-            </div>
-             <FormikProvider value={formik}>
-              <Form onSubmit={formik.handleSubmit} className="col-12 col-md-6 mt-3 mt-mb-0">
-                  <h1 className="text-center mb-4">Войти</h1>
-                  <Form.Group className="form-floating mb-3">
-                  
-                  <Form.Control
-                    autoComplete="username"
-                    id="username"
-                    onChange={formik.handleChange}
-                    value={formik.values.username}
-                    />
-                    <Form.Label htmlFor='username' >Ваш ник</Form.Label>
-                  <ErrorMessage component="div" name="username" />
-                </Form.Group>
-
-                <Form.Group className="form-floating mb-3" >
-                  <Form.Control type="password"
-                    id="password"
-                    autoComplete="password"
-                    onChange={formik.handleChange}
-                    value={formik.values.password} />
-                  <Form.Label htmlFor='password' >Пароль</Form.Label>  
-                  <ErrorMessage component="div" name="password" />
-                </Form.Group>
-
-                <Button type="submit">
-                  Войти
-                </Button>
-              </Form>
-
-              </FormikProvider>
-          </div>
+      <nav class="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
+        <div class="container">
+          <a class="navbar-brand" href="/">
+            Hexlet Chat
+          </a>
         </div>
-        <div className="card-footer p-4">
-          <div className="text-center">
-            <span>{t('NoAccount?')}</span>
-              <a href="/signup">{t('Registration')}</a>
+      </nav>
+
+      <div className='container-fluid h-100'>
+        <div className='row justify-content-center align-content-center h-100'>
+          <div className='col-12 col-md-8 col-xxl-6'>
+            <div className='card shadow-sm'>
+              <div className='card-body row p-5'>
+                <div className='col-12 col-md-6 d-flex align-items-center justify-content-center'>
+                  <img src={hexletImage} className='rounded-circle' alt='Войти' />
+                  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+                </div>
+                <FormikProvider value={formik}>
+                  <Form onSubmit={formik.handleSubmit} className="col-12 col-md-6 mt-3 mt-mb-0">
+                    <h1 className="text-center mb-4">{t('Login')}</h1>
+                    <Form.Group className="form-floating mb-3">
+                    <Form.Control
+                      autoComplete="username"
+                      id="username"
+                      onChange={formik.handleChange}
+                      value={formik.values.username}
+                      />
+                    <Form.Label htmlFor='username' >{t('Your_nick')}</Form.Label>
+                    <ErrorMessage component="div" name="username" />
+                    </Form.Group>
+
+                    <Form.Group className="form-floating mb-3" >
+                    <Form.Control type="password"
+                      id="password"
+                      autoComplete="password"
+                      onChange={formik.handleChange}
+                      value={formik.values.password} />
+                    <Form.Label htmlFor='password' >{t('Password')}</Form.Label>  
+                    <ErrorMessage component="div" name="password" />
+                    </Form.Group>
+                    <Button type="submit">{t('Login')}</Button>
+                  </Form>
+                  </FormikProvider>
+              </div>
+          </div>
+            <div className="card-footer p-4">
+              <div className="text-center">
+                <span>{t('NoAccount?')}</span>
+                  <a href="/signup">{t('Registration')}</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
   </div>
   </>
 };

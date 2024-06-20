@@ -1,8 +1,16 @@
 /* eslint-disable max-len */
+// {t('Login')}
+
 export default {
   ru: {
     translation: {
+      "Login": "Войти",
       "Logout": "Выйти",
+      "User_name": "Имя пользователя",
+      "Password": "Пароль",
+      "Confirm_password": "Подтвердите пароль",
+      "Register": "Зарегистрироваться",
+      "Your_nick": "Ваш ник",
       "Channels": "Каналы",
       "Enter message...": "Введите сообщение...",
       "Channel management": "Управление каналом",

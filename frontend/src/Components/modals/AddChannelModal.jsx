@@ -10,11 +10,11 @@ import { toast } from 'react-toastify';
 
 var filter = require('leo-profanity');
 
-const AddModal = ({ showAddModal, setShowAddModal, setActiveChannelId }) => {
-  const token = useSelector((state) => state.usersReducer.token);
+const AddChannelModal = ({ showAddChannelModal, setShowAddChannelModal, setActiveChannelId }) => {
+  const token = useSelector((state) => state.users.token);
   const { t } = useTranslation();
 
-  const handleClose = () => setShowAddModal(false);
+  const handleClose = () => setShowAddChannelModal(false);
 
   const handleNewChannelSubmit = (values, actions) => {
     const censoredChannelName = filter.clean(values.channelName);
@@ -25,7 +25,7 @@ const AddModal = ({ showAddModal, setShowAddModal, setActiveChannelId }) => {
           Authorization: `Bearer ${token}`,
         },
       }).then((response) => {
-        setShowAddModal(false);
+        setShowAddChannelModal(false);
         setActiveChannelId(response.data.id);
         toast.success(t('toasts.NewChannelCreate'));
       });
@@ -46,7 +46,7 @@ const AddModal = ({ showAddModal, setShowAddModal, setActiveChannelId }) => {
 
   return (
     <>
-      <Modal show={showAddModal} onHide={handleClose}>
+      <Modal show={showAddChannelModal} onHide={handleClose}>
         <FormikProvider value={formik}>
           <Form onSubmit={formik.handleSubmit}>        
             <Modal.Header closeButton>
@@ -69,7 +69,7 @@ const AddModal = ({ showAddModal, setShowAddModal, setActiveChannelId }) => {
             <Modal.Footer>
               <Button type="button"
                       className="me-2 btn btn-secondary"
-                      onClick={() => setShowAddModal(false)}>
+                      onClick={() => setShowAddChannelModal(false)}>
               {t('Cancel')}
               </Button>
               <Button type="submit"
@@ -84,4 +84,4 @@ const AddModal = ({ showAddModal, setShowAddModal, setActiveChannelId }) => {
   );
 }
 
-export default AddModal;
+export default AddChannelModal;

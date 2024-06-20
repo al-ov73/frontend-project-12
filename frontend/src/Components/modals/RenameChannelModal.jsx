@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
 const RenameChannelModal = ({ showRenameChannelModal, setShowRenameChannelModal, channel }) => {
-  const token = useSelector((state) => state.usersReducer.token);
+  const token = useSelector((state) => state.users.token);
   const { t } = useTranslation();
   const handleClose = () => setShowRenameChannelModal(false);
 

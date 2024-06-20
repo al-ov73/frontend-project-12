@@ -1,3 +1,7 @@
+//TODO
+// Navbar component
+// English language
+
 import React from 'react';
 import { FormikProvider, useFormik, ErrorMessage } from "formik";
 import Button from 'react-bootstrap/Button';
@@ -66,7 +70,7 @@ const SignupPage = () => {
 
   return <>
     <ToastContainer />
-      <div class='d-flex flex-column h-100'>
+    <div class='d-flex flex-column h-100'>
       <nav class="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
         <div class="container">
           <a class="navbar-brand" href="/">
@@ -74,63 +78,63 @@ const SignupPage = () => {
           </a>
         </div>
       </nav>
-  <div className='container-fluid h-100'>
-    <div className='row justify-content-center align-content-center h-100'>
-      <div className='col-12 col-md-8 col-xxl-6'>
-        <div className='card shadow-sm'>
-          <div className='card-body row p-5'>
-            <div className='col-12 col-md-6 d-flex align-items-center justify-content-center'>
-              <img src={hexletImage} className='rounded-circle' alt='Войти' />
-              <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+      <div className='container-fluid h-100'>
+        <div className='row justify-content-center align-content-center h-100'>
+          <div className='col-12 col-md-8 col-xxl-6'>
+            <div className='card shadow-sm'>
+              <div className='card-body row p-5'>
+                <div className='col-12 col-md-6 d-flex align-items-center justify-content-center'>
+                  <img src={hexletImage} className='rounded-circle' alt={t('Login')} />
+                  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+                </div>
+                <FormikProvider value={formik}>
+                  <Form onSubmit={formik.handleSubmit}>
+                      <h1 className="text-center mb-4">{t('Login')}</h1>
+                      <Form.Group className="mb-3">
+                      <Form.Label htmlFor="username">{t('User_name')}</Form.Label>
+                        <Form.Control type="text"
+                          placeholder="{t('User_name')}"
+                          autoComplete="username"
+                          id="username"
+                          onChange={formik.handleChange}
+                          value={formik.values.username}
+                          />
+                      <ErrorMessage name="username" />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" >
+                      <Form.Label htmlFor="password">{t('Password')}</Form.Label>
+                      <Form.Control type="password"
+                        placeholder={t('Password')}
+                        id="password"
+                        autoComplete="password"
+                        onChange={formik.handleChange}
+                        value={formik.values.password} />
+                      <ErrorMessage name="password" />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" >
+                      <Form.Label htmlFor="passwordConfirmation">{t('Confirm_password')}</Form.Label>
+                      <Form.Control type="password"
+                        placeholder={t('Confirm_password')}
+                        id="passwordConfirmation"
+                        autoComplete="passwordConfirmation"
+                        onChange={formik.handleChange}
+                        value={formik.values.passwordConfirmation} />
+                      <ErrorMessage name="passwordConfirmation" />
+                    </Form.Group>
+
+                    <Button type="submit">
+                      {t('Register')}
+                    </Button>
+                  </Form>
+                </FormikProvider>
+              </div>
             </div>
-            <FormikProvider value={formik}>
-              <Form onSubmit={formik.handleSubmit}>
-                  <h1 className="text-center mb-4">Войти</h1>
-                  <Form.Group className="mb-3">
-                  <Form.Label htmlFor="username">Имя пользователя</Form.Label>
-                    <Form.Control type="text"
-                      placeholder="Имя пользователя"
-                      autoComplete="username"
-                      id="username"
-                      onChange={formik.handleChange}
-                      value={formik.values.username}
-                      />
-                  <ErrorMessage name="username" />
-                </Form.Group>
-
-                <Form.Group className="mb-3" >
-                  <Form.Label htmlFor="password">Пароль</Form.Label>
-                  <Form.Control type="password"
-                    placeholder='Пароль'
-                    id="password"
-                    autoComplete="password"
-                    onChange={formik.handleChange}
-                    value={formik.values.password} />
-                  <ErrorMessage name="password" />
-                </Form.Group>
-
-                <Form.Group className="mb-3" >
-                  <Form.Label htmlFor="passwordConfirmation">Подтвердите пароль</Form.Label>
-                  <Form.Control type="password"
-                    placeholder='Подтвердите пароль'
-                    id="passwordConfirmation"
-                    autoComplete="passwordConfirmation"
-                    onChange={formik.handleChange}
-                    value={formik.values.passwordConfirmation} />
-                  <ErrorMessage name="passwordConfirmation" />
-                </Form.Group>
-
-                <Button type="submit">
-                  Зарегистрироваться
-                </Button>
-              </Form>
-              </FormikProvider>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  </div>
   </>
 };
 
