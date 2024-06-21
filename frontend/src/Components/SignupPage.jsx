@@ -1,5 +1,4 @@
 //TODO
-// Navbar component
 // English language
 
 import React from 'react';
@@ -16,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import useAuth from '../hooks/index.jsx';
 import { toast, ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-
+import NavbarPage from './Navbar.jsx';
 
 const SignupPage = () => {
   const dispatch = useDispatch()
@@ -71,13 +70,7 @@ const SignupPage = () => {
   return <>
     <ToastContainer />
     <div class='d-flex flex-column h-100'>
-      <nav class="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
-        <div class="container">
-          <a class="navbar-brand" href="/">
-            Hexlet Chat
-          </a>
-        </div>
-      </nav>
+      <NavbarPage />
       <div className='container-fluid h-100'>
         <div className='row justify-content-center align-content-center h-100'>
           <div className='col-12 col-md-8 col-xxl-6'>

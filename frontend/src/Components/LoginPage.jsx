@@ -9,6 +9,7 @@ import { FormikProvider, useFormik, ErrorMessage } from "formik";
 import * as Yup from 'yup';
 import axios from 'axios';
 
+import NavbarPage from './Navbar.jsx';
 import routes from '../routes/routes.js';
 import hexletImage from '../images/LoginForm.jpg';
 import { setCredentials } from '../slices/usersSlice.js';
@@ -66,13 +67,7 @@ const LoginPage = () => {
   return <>
     <ToastContainer />
     <div class='d-flex flex-column h-100'>
-      <nav class="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
-        <div class="container">
-          <a class="navbar-brand" href="/">
-            Hexlet Chat
-          </a>
-        </div>
-      </nav>
+      <NavbarPage />
 
       <div className='container-fluid h-100'>
         <div className='row justify-content-center align-content-center h-100'>
@@ -113,7 +108,7 @@ const LoginPage = () => {
           </div>
             <div className="card-footer p-4">
               <div className="text-center">
-                <span>{t('NoAccount?')}</span>
+                <span>{t('NoAccount?')} </span>
                   <a href="/signup">{t('Registration')}</a>
               </div>
             </div>

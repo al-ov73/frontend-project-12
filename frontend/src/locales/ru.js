@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
-// {t('Login')}
+// {t('404page')}
 
 export default {
-  ru: {
+
     translation: {
       "Login": "Войти",
       "Logout": "Выйти",
@@ -22,9 +22,9 @@ export default {
       "Send": "Отправить",
       "Delete_channel_?": "Удалить канал?",
       "Rename_channel": "Переименовать канал",
-      "C": "Имя канала",
       "NoAccount?": "Нет аккаунта?",
       "Registration": "Регистрация",
+      "404page": "Такой страницы не существует :(",
       "": "",
       toasts: {
         "NewChannelCreate": "Новый канал успешно создан",
@@ -45,5 +45,5 @@ export default {
       }
 
     }
-  }
+
 };

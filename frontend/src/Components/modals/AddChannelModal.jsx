@@ -54,7 +54,7 @@ const AddChannelModal = ({ showAddChannelModal, setShowAddChannelModal, setActiv
             </Modal.Header>
             <Modal.Body>
               <Form.Group>
-                <Form.Label className="visually-hidden">Имя канала</Form.Label>
+                <Form.Label className="visually-hidden">{t('Channel_name')}</Form.Label>
                 <Form.Control type="channelName"
                   placeholder={t('Channel_name')}
                   autoComplete="channelName"
