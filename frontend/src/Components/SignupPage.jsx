@@ -86,7 +86,7 @@ const SignupPage = () => {
                       <Form.Group className="mb-3">
                       <Form.Label htmlFor="username">{t('User_name')}</Form.Label>
                         <Form.Control type="text"
-                          placeholder="{t('User_name')}"
+                          placeholder={t('User_name')}
                           autoComplete="username"
                           id="username"
                           onChange={formik.handleChange}

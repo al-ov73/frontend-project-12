@@ -25,6 +25,7 @@ export default {
       "NoAccount?": "Нет аккаунта?",
       "Registration": "Регистрация",
       "404page": "Такой страницы не существует :(",
+      "YouEnteredAs": "Вы вошли как",
       "": "",
       toasts: {
         "NewChannelCreate": "Новый канал успешно создан",

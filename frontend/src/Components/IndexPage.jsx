@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { useState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { FormikProvider, useFormik } from "formik";
 import { useTranslation } from 'react-i18next';
 import { toast, ToastContainer } from 'react-toastify';
@@ -106,6 +106,17 @@ const IndexPage = () => {
     getMessagesList(token).then((messages) => setMessages(messages));
   }, []);
 
+  const useChatScroll = (dep) => {
+    const ref = useRef();
+    useEffect(() => {
+      if (ref.current) {
+        ref.current.scrollTop = ref.current.scrollHeight;
+      }
+    }, [dep]);
+    return ref;
+  }
+  const ref = useChatScroll(messages)
+
   // Socket event subscribes
   socket.on('newMessage', (payload) => {
     setMessages([...messages, payload])
@@ -208,7 +219,7 @@ const IndexPage = () => {
                   <div className="bg-light mb-4 p-3 shadow-sm small">
                     <p className="m-0"><b># {activeChannel && activeChannel.name}</b></p>
                   </div>
-                  <div id="messages-box" className="chat-messages overflow-auto px-5 ">
+                  <div ref={ref} id="messages-box" className="chat-messages overflow-auto px-5 ">
                     {messages.map((message) => {
                       if (message.channelId === activeChannelId) {
                         return <>
@@ -220,16 +231,16 @@ const IndexPage = () => {
                   <div className="mt-auto px-5 py-3">
 
                   <FormikProvider value={formik}>
-                    <Form onSubmit={formik.handleSubmit} novalidate="" className="py-1 border rounded-2"> 
+                    <Form onSubmit={formik.handleSubmit} novalidate="" className="py-1 border-0"> 
                       <Form.Group className="input-group has-validation">
                       <Form.Control
-                        aria-label="Новое сообщение"
+                        aria-label={t('Enter message...')}
                         placeholder=""
                         autoComplete="message"
                         id="message"
                         name="message"
                         type="text"
-                        className="border-0 p-0 ps-2"
+                        className=" border border-dark border-2 rounded-4 p-0 ps-2"
                         onChange={formik.handleChange}
                         value={formik.values.message} />
                         
@@ -238,7 +249,7 @@ const IndexPage = () => {
                             <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"></path>
                           </svg>
                           <span className="visually-hidden">Отправить</span>
-                          </button>
+                        </button>
 
                       </Form.Group>
                     </Form>
