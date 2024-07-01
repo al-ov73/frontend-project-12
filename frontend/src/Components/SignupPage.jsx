@@ -41,6 +41,7 @@ const SignupPage = () => {
       });
       const { token, username } = response.data;
       if (token) {
+        localStorage.setItem('user', JSON.stringify({ token, username }))
         dispatch(setCredentials({ token, username }))
         auth.loggedIn = true;
         toast.success(t('toasts.SignupSuccess'));

@@ -6,6 +6,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux'
 import IndexPage from './Components/IndexPage';
 import LoginPage from './Components/LoginPage';
 import SignupPage from './Components/SignupPage';
@@ -13,6 +14,7 @@ import Error404Page from './Components/Error404Page';
 import { AuthContext, ModalContext } from './contexts/index.jsx';
 import useAuth from './hooks/index.jsx';
 import { Provider, ErrorBoundary } from '@rollbar/react';
+import { setCredentials } from './slices/usersSlice.js';
 
 const rollbarConfig = {
   accessToken: 'c281d54b8bd04499be6c36258414da01',
@@ -23,7 +25,7 @@ const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const logIn = () => setLoggedIn(true);
   const logOut = () => {
-    localStorage.removeItem('userId');
+    localStorage.removeItem('user');
     setLoggedIn(false);
   };
   return (
@@ -46,6 +48,12 @@ export const ModalProvider = ({ children }) => {
 const PrivateRoute = ({ children }) => {
   const auth = useAuth();
   const location = useLocation();
+  const dispatch = useDispatch()
+  const { token, username } = JSON.parse(localStorage.getItem('user'));
+  if (token) {
+    auth.loggedIn = true;
+    dispatch(setCredentials({ token, username }))
+  }
   return (
     auth.loggedIn ? children : <Navigate to="/login" state={{ from: location }} />
   );
