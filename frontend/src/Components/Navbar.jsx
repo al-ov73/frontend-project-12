@@ -22,7 +22,8 @@ const NavbarPage = () => {
   ];
   const handleLogout = () => {
     dispatch(removeCredentials());
-    auth.loggedIn = false;
+    auth.logOut();
+    localStorage.removeItem('user');
     return navigate('login');
   }
 

@@ -48,12 +48,12 @@ export const ModalProvider = ({ children }) => {
 const PrivateRoute = ({ children }) => {
   const auth = useAuth();
   const location = useLocation();
-  const dispatch = useDispatch()
-  const { token, username } = JSON.parse(localStorage.getItem('user'));
-  if (token) {
+  const dispatch = useDispatch();
+  if (localStorage.getItem('user')) {
+    const { token, username } = JSON.parse(localStorage.getItem('user'));
     auth.loggedIn = true;
-    dispatch(setCredentials({ token, username }))
-  }
+    dispatch(setCredentials({ token, username }));
+  };
   return (
     auth.loggedIn ? children : <Navigate to="/login" state={{ from: location }} />
   );
